@@ -1,0 +1,379 @@
+/**
+ * Estilos do Módulo de Fichas Técnicas
+ */
+
+/* Container principal */
+.fichas-view {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Header */
+.fichas-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.fichas-header h1 {
+  margin: 0;
+  color: var(--color-text-primary, #333);
+}
+
+/* Lista de fichas */
+.fichas-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Card de ficha */
+.ficha-card {
+  background: white;
+  border: 1px solid var(--color-border, #ddd);
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.ficha-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.ficha-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--color-border, #eee);
+}
+
+.ficha-card-header h3 {
+  margin: 0;
+  color: var(--color-text-primary, #333);
+  font-size: 1.25rem;
+}
+
+.ficha-card-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.ficha-card-body p {
+  margin: 0.5rem 0;
+  color: var(--color-text-secondary, #666);
+}
+
+.btn-calculate {
+  margin-top: 1rem;
+  width: 100%;
+}
+
+/* Formulário */
+.ficha-form-container {
+  background: white;
+  border: 1px solid var(--color-border, #ddd);
+  border-radius: 8px;
+  padding: 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.ficha-form-container h2 {
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  color: var(--color-text-primary, #333);
+}
+
+.ficha-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  font-weight: 600;
+  color: var(--color-text-primary, #333);
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  padding: 0.75rem;
+  border: 1px solid var(--color-border, #ddd);
+  border-radius: 4px;
+  font-size: 1rem;
+  font-family: inherit;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--color-primary, #007bff);
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+/* Lista de insumos no formulário */
+.insumos-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: var(--color-background, #f8f9fa);
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+}
+
+.empty-insumos {
+  text-align: center;
+  color: var(--color-text-secondary, #666);
+  font-style: italic;
+  margin: 0;
+}
+
+.insumo-item {
+  display: grid;
+  grid-template-columns: 2fr 1fr auto;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.insumo-item select,
+.insumo-item input {
+  padding: 0.5rem;
+  border: 1px solid var(--color-border, #ddd);
+  border-radius: 4px;
+}
+
+.btn-remove-insumo {
+  padding: 0.5rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.btn-remove-insumo:hover {
+  opacity: 0.7;
+}
+
+/* Ações do formulário */
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 1rem;
+}
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 8px;
+  max-width: 600px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--color-border, #eee);
+}
+
+.modal-header h2 {
+  margin: 0;
+  color: var(--color-text-primary, #333);
+}
+
+.btn-close {
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  color: var(--color-text-secondary, #666);
+}
+
+.btn-close:hover {
+  color: var(--color-text-primary, #333);
+}
+
+.modal-body {
+  padding: 1.5rem;
+}
+
+.modal-footer {
+  padding: 1.5rem;
+  border-top: 1px solid var(--color-border, #eee);
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+/* Detalhes da ficha */
+.ficha-details {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.detail-section h3 {
+  margin: 0 0 0.75rem 0;
+  color: var(--color-text-primary, #333);
+  font-size: 1.1rem;
+}
+
+.detail-section p {
+  margin: 0.5rem 0;
+  color: var(--color-text-secondary, #666);
+}
+
+.insumos-details-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.insumos-details-list li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--color-border, #eee);
+  color: var(--color-text-secondary, #666);
+}
+
+.insumos-details-list li:last-child {
+  border-bottom: none;
+}
+
+.modo-preparo {
+  white-space: pre-wrap;
+  line-height: 1.6;
+}
+
+/* Estado vazio */
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: var(--color-text-secondary, #666);
+}
+
+.empty-state p {
+  margin: 0.5rem 0;
+  font-size: 1.1rem;
+}
+
+.empty-state-hint {
+  font-size: 0.9rem;
+  font-style: italic;
+}
+
+/* Botões */
+.btn-primary,
+.btn-secondary,
+.btn-icon {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.btn-primary {
+  background: var(--color-primary, #007bff);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: var(--color-primary-dark, #0056b3);
+}
+
+.btn-primary:active {
+  transform: scale(0.98);
+}
+
+.btn-secondary {
+  background: var(--color-secondary, #6c757d);
+  color: white;
+}
+
+.btn-secondary:hover {
+  background: var(--color-secondary-dark, #545b62);
+}
+
+.btn-icon {
+  padding: 0.5rem;
+  background: transparent;
+  font-size: 1.2rem;
+}
+
+.btn-icon:hover {
+  background: var(--color-background, #f8f9fa);
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .fichas-view {
+    padding: 1rem;
+  }
+
+  .fichas-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .fichas-list {
+    grid-template-columns: 1fr;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .insumo-item {
+    grid-template-columns: 1fr;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .form-actions button {
+    width: 100%;
+  }
+}

@@ -1,0 +1,311 @@
+/**
+ * Estilos do Módulo de Produção
+ */
+
+/* Container principal */
+.producao-view {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Header */
+.producao-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.producao-header h1 {
+  margin: 0;
+  color: var(--color-text-primary, #333);
+}
+
+/* Lista de produções */
+.producoes-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Card de produção */
+.producao-card {
+  background: white;
+  border: 1px solid var(--color-border, #ddd);
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.producao-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Status da produção */
+.producao-card.status-planejada {
+  border-left: 4px solid #ffc107;
+}
+
+.producao-card.status-em-producao {
+  border-left: 4px solid #17a2b8;
+}
+
+.producao-card.status-concluida {
+  border-left: 4px solid #28a745;
+}
+
+.producao-card.status-cancelada {
+  border-left: 4px solid #dc3545;
+  opacity: 0.7;
+}
+
+.producao-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--color-border, #eee);
+}
+
+.producao-card-header h3 {
+  margin: 0;
+  color: var(--color-text-primary, #333);
+  font-size: 1.25rem;
+}
+
+.producao-status {
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.status-planejada .producao-status {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.status-em-producao .producao-status {
+  background: #d1ecf1;
+  color: #0c5460;
+}
+
+.status-concluida .producao-status {
+  background: #d4edda;
+  color: #155724;
+}
+
+.status-cancelada .producao-status {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.producao-card-body p {
+  margin: 0.5rem 0;
+  color: var(--color-text-secondary, #666);
+}
+
+.producao-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+.producao-actions button {
+  flex: 1;
+  min-width: 100px;
+}
+
+.btn-iniciar {
+  background: #17a2b8;
+  color: white;
+}
+
+.btn-iniciar:hover {
+  background: #138496;
+}
+
+.btn-concluir {
+  background: #28a745;
+  color: white;
+}
+
+.btn-concluir:hover {
+  background: #218838;
+}
+
+.btn-cancelar {
+  background: #dc3545;
+  color: white;
+}
+
+.btn-cancelar:hover {
+  background: #c82333;
+}
+
+/* Formulário */
+.producao-form-container {
+  background: white;
+  border: 1px solid var(--color-border, #ddd);
+  border-radius: 8px;
+  padding: 2rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.producao-form-container h2 {
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  color: var(--color-text-primary, #333);
+}
+
+.producao-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  font-weight: 600;
+  color: var(--color-text-primary, #333);
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  padding: 0.75rem;
+  border: 1px solid var(--color-border, #ddd);
+  border-radius: 4px;
+  font-size: 1rem;
+  font-family: inherit;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--color-primary, #007bff);
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 1rem;
+}
+
+/* Estado vazio */
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: var(--color-text-secondary, #666);
+}
+
+.empty-state p {
+  margin: 0.5rem 0;
+  font-size: 1.1rem;
+}
+
+.empty-state-hint {
+  font-size: 0.9rem;
+  font-style: italic;
+}
+
+/* Botões */
+.btn-primary,
+.btn-secondary,
+.btn-success,
+.btn-danger {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.btn-primary {
+  background: var(--color-primary, #007bff);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: var(--color-primary-dark, #0056b3);
+}
+
+.btn-primary:active {
+  transform: scale(0.98);
+}
+
+.btn-secondary {
+  background: var(--color-secondary, #6c757d);
+  color: white;
+}
+
+.btn-secondary:hover {
+  background: var(--color-secondary-dark, #545b62);
+}
+
+.btn-success {
+  background: #28a745;
+  color: white;
+}
+
+.btn-success:hover {
+  background: #218838;
+}
+
+.btn-danger {
+  background: #dc3545;
+  color: white;
+}
+
+.btn-danger:hover {
+  background: #c82333;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .producao-view {
+    padding: 1rem;
+  }
+
+  .producao-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .producoes-list {
+    grid-template-columns: 1fr;
+  }
+
+  .producao-actions {
+    flex-direction: column;
+  }
+
+  .producao-actions button {
+    width: 100%;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .form-actions button {
+    width: 100%;
+  }
+}

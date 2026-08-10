@@ -1,0 +1,351 @@
+/**
+ * app.css - Estilos da Aplicação Principal
+ * 
+ * Estilos para:
+ * - Layout geral
+ * - Menu de navegação
+ * - Header e footer
+ * - Responsividade
+ */
+
+/* ========================================
+   RESET E VARIÁVEIS
+   ======================================== */
+
+:root {
+  /* Cores OBA Doceria (do logo) */
+  --oba-marrom: #8B6F47;
+  --oba-marrom-escuro: #6B5437;
+  --oba-marrom-claro: #A68A5F;
+  --oba-bege: #F5E6D3;
+  --oba-bege-escuro: #E8D4BC;
+  --oba-rosa: #E8A5A5;
+  --oba-rosa-escuro: #D88888;
+  --oba-rosa-claro: #F5C5C5;
+  
+  /* Cores principais (baseadas no logo) */
+  --primary-color: #8B6F47;
+  --primary-hover: #6B5437;
+  --primary-light: #A68A5F;
+  
+  /* Cores secundárias */
+  --secondary-color: #E8A5A5;
+  --secondary-hover: #D88888;
+  --secondary-light: #F5C5C5;
+  
+  /* Cores de fundo */
+  --bg-primary: #ffffff;
+  --bg-secondary: #F5E6D3;
+  --bg-tertiary: #E8D4BC;
+  
+  /* Cores de texto */
+  --text-primary: #4A3728;
+  --text-secondary: #6B5437;
+  --text-tertiary: #8B6F47;
+  
+  /* Cores de borda */
+  --border-color: #E8D4BC;
+  --border-hover: #D8C4AC;
+  
+  /* Cores de status */
+  --success-color: #10b981;
+  --warning-color: #f59e0b;
+  --error-color: #ef4444;
+  --info-color: #3b82f6;
+  
+  /* Sombras */
+  --shadow-sm: 0 1px 2px 0 rgba(139, 111, 71, 0.1);
+  --shadow-md: 0 4px 6px -1px rgba(139, 111, 71, 0.15);
+  --shadow-lg: 0 10px 15px -3px rgba(139, 111, 71, 0.2);
+  
+  /* Espaçamentos */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  
+  /* Tamanhos de fonte */
+  --font-xs: 0.75rem;
+  --font-sm: 0.875rem;
+  --font-md: 1rem;
+  --font-lg: 1.125rem;
+  --font-xl: 1.25rem;
+  --font-2xl: 1.5rem;
+  
+  /* Raios de borda */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  
+  /* Transições */
+  --transition-fast: 150ms ease-in-out;
+  --transition-normal: 250ms ease-in-out;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-size: var(--font-md);
+  line-height: 1.5;
+  color: var(--text-primary);
+  background-color: var(--bg-secondary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ========================================
+   LAYOUT PRINCIPAL
+   ======================================== */
+
+.app-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ========================================
+   HEADER
+   ======================================== */
+
+.app-header {
+  background-color: var(--bg-primary);
+  border-bottom: 1px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.app-logo {
+  padding: var(--spacing-lg) var(--spacing-xl);
+  text-align: center;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.app-logo h1 {
+  font-size: var(--font-2xl);
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--oba-marrom) 0%, var(--oba-rosa) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: var(--spacing-xs);
+}
+
+.app-subtitle {
+  font-size: var(--font-sm);
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+/* ========================================
+   MENU DE NAVEGAÇÃO
+   ======================================== */
+
+.app-menu {
+  display: flex;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md) var(--spacing-xl);
+  background-color: var(--bg-secondary);
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md) var(--spacing-lg);
+  background-color: var(--bg-primary);
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  font-size: var(--font-md);
+  font-weight: 500;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  min-width: 120px;
+  justify-content: center;
+}
+
+.menu-item:hover {
+  border-color: var(--primary-light);
+  background-color: var(--bg-tertiary);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.menu-item.active {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  color: white;
+  box-shadow: var(--shadow-md);
+}
+
+.menu-item.active:hover {
+  background-color: var(--primary-hover);
+  border-color: var(--primary-hover);
+  transform: translateY(-2px);
+}
+
+.menu-icon {
+  font-size: var(--font-xl);
+}
+
+.menu-label {
+  font-weight: 600;
+}
+
+/* ========================================
+   CONTEÚDO PRINCIPAL
+   ======================================== */
+
+.app-content {
+  flex: 1;
+  padding: var(--spacing-xl);
+  max-width: 1400px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* ========================================
+   FOOTER
+   ======================================== */
+
+.app-footer {
+  background-color: var(--bg-primary);
+  border-top: 1px solid var(--border-color);
+  padding: var(--spacing-lg) var(--spacing-xl);
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: var(--font-sm);
+}
+
+/* ========================================
+   RESPONSIVIDADE
+   ======================================== */
+
+/* Tablets */
+@media (max-width: 768px) {
+  .app-logo h1 {
+    font-size: var(--font-xl);
+  }
+  
+  .app-menu {
+    flex-wrap: wrap;
+    padding: var(--spacing-sm) var(--spacing-md);
+  }
+  
+  .menu-item {
+    flex: 1;
+    min-width: 100px;
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: var(--font-sm);
+  }
+  
+  .menu-icon {
+    font-size: var(--font-lg);
+  }
+  
+  .app-content {
+    padding: var(--spacing-md);
+  }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .app-logo {
+    padding: var(--spacing-md);
+  }
+  
+  .app-logo h1 {
+    font-size: var(--font-lg);
+  }
+  
+  .app-subtitle {
+    font-size: var(--font-xs);
+  }
+  
+  .app-menu {
+    flex-direction: column;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-sm);
+  }
+  
+  .menu-item {
+    width: 100%;
+    min-width: auto;
+  }
+  
+  .app-content {
+    padding: var(--spacing-sm);
+  }
+  
+  .app-footer {
+    padding: var(--spacing-md);
+    font-size: var(--font-xs);
+  }
+}
+
+/* ========================================
+   UTILITÁRIOS
+   ======================================== */
+
+/* Loading */
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: var(--spacing-xl);
+  color: var(--text-secondary);
+}
+
+/* Mensagens de erro */
+.error-message {
+  background-color: #fee2e2;
+  border: 1px solid #fecaca;
+  color: #991b1b;
+  padding: var(--spacing-md);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--spacing-md);
+}
+
+/* Mensagens de sucesso */
+.success-message {
+  background-color: #d1fae5;
+  border: 1px solid #a7f3d0;
+  color: #065f46;
+  padding: var(--spacing-md);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--spacing-md);
+}
+
+/* Container vazio */
+.empty-state {
+  text-align: center;
+  padding: var(--spacing-xl);
+  color: var(--text-secondary);
+}
+
+.empty-state-icon {
+  font-size: 3rem;
+  margin-bottom: var(--spacing-md);
+  opacity: 0.5;
+}
+
+.empty-state-title {
+  font-size: var(--font-lg);
+  font-weight: 600;
+  margin-bottom: var(--spacing-sm);
+  color: var(--text-primary);
+}
+
+.empty-state-description {
+  font-size: var(--font-sm);
+  color: var(--text-secondary);
+}

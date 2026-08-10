@@ -1,0 +1,108 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Sistema de Gestão Completo para Doceria OBA">
+  <title>OBA Doceria - Sistema de Gestão</title>
+  
+  <!-- Estilos -->
+  <link rel="stylesheet" href="/src/styles/app.css">
+  <link rel="stylesheet" href="/src/core/ui/ui.css">
+  <link rel="stylesheet" href="/src/modules/dashboard/styles/dashboard.css">
+  <link rel="stylesheet" href="/src/modules/insumos/styles/insumos.css">
+  <link rel="stylesheet" href="/src/modules/estoque/styles/estoque.css">
+  <link rel="stylesheet" href="/src/modules/fornecedores/styles/fornecedores.css">
+  <link rel="stylesheet" href="/src/modules/compras/styles/compras.css">
+  <link rel="stylesheet" href="/src/modules/fichas-tecnicas/styles/fichas-tecnicas.css">
+  <link rel="stylesheet" href="/src/modules/producao/styles/producao.css">
+  
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍰</text></svg>">
+  
+  <!-- Import Map para módulos NPM -->
+  <script type="importmap">
+  {
+    "imports": {
+      "uuid": "/node_modules/uuid/dist/index.js"
+    }
+  }
+  </script>
+</head>
+<body>
+  <!-- Container principal da aplicação -->
+  <div id="app"></div>
+  
+  <!-- Script principal -->
+  <script type="module">
+    import { App } from '/src/App.js';
+    
+    // Inicializar aplicação quando DOM estiver pronto
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        console.log('🚀 Iniciando OBA Doceria...');
+        
+        const app = new App();
+        await app.init();
+        
+        console.log('✅ OBA Doceria iniciado com sucesso!');
+        
+        // Expor app globalmente para debugging
+        window.obaApp = app;
+      } catch (error) {
+        console.error('❌ Erro ao iniciar aplicação:', error);
+        
+        // Mostrar mensagem de erro amigável
+        const appContainer = document.getElementById('app');
+        if (appContainer) {
+          appContainer.innerHTML = `
+            <div style="
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              justify-content: center;
+              min-height: 100vh;
+              padding: 2rem;
+              text-align: center;
+              font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            ">
+              <div style="font-size: 4rem; margin-bottom: 1rem;">😞</div>
+              <h1 style="color: #dc2626; margin-bottom: 0.5rem;">Erro ao Iniciar Aplicação</h1>
+              <p style="color: #6b7280; margin-bottom: 1.5rem;">
+                Ocorreu um erro ao carregar o sistema. Por favor, recarregue a página.
+              </p>
+              <button 
+                onclick="window.location.reload()" 
+                style="
+                  background-color: #6366f1;
+                  color: white;
+                  padding: 0.75rem 1.5rem;
+                  border: none;
+                  border-radius: 0.5rem;
+                  font-size: 1rem;
+                  font-weight: 600;
+                  cursor: pointer;
+                "
+              >
+                Recarregar Página
+              </button>
+              <details style="margin-top: 2rem; max-width: 600px;">
+                <summary style="cursor: pointer; color: #6b7280;">Detalhes do erro</summary>
+                <pre style="
+                  text-align: left;
+                  background-color: #f3f4f6;
+                  padding: 1rem;
+                  border-radius: 0.5rem;
+                  overflow-x: auto;
+                  margin-top: 1rem;
+                  font-size: 0.875rem;
+                ">${error.stack || error.message || error}</pre>
+              </details>
+            </div>
+          `;
+        }
+      }
+    });
+  </script>
+</body>
+</html>
