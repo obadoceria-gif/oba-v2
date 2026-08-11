@@ -61,7 +61,7 @@ export class FornecedorForm {
                 placeholder="00.000.000/0000-00"
                 required
                 value="${this.escapeHtml(this.fornecedor?.cnpj || '')}"
-                ${this.isEditMode ? 'readonly' : ''}
+                ${this.isEditMode && this.fornecedor?.cnpj ? 'readonly' : ''}
               >
               <div class="invalid-feedback">CNPJ é obrigatório e deve ser válido</div>
             </div>
@@ -167,7 +167,7 @@ applyMasks() {
 
   // Máscara progressiva de CNPJ
   // Os separadores só aparecem quando já existe um dígito depois deles.
-  if (cnpjInput && !this.isEditMode) {
+  if (cnpjInput && (!this.isEditMode || !this.fornecedor?.cnpj)) {
     cnpjInput.addEventListener('input', (e) => {
       const digits = e.target.value
         .replace(/\D/g, '')

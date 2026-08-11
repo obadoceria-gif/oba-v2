@@ -61,12 +61,19 @@ export class FornecedoresService {
    */
   async checkCNPJExists(cnpj, excludeId = null) {
     try {
-      const cnpjNumbers = cnpj.replace(/\D/g, '');
+      const cnpjNumbers = String(cnpj || '').replace(/\D/g, '');
+
+      // Registros legados podem não possuir CNPJ.
+      // Nesse caso não existe valor para comparar.
+      if (!cnpjNumbers) {
+        return false;
+      }
+
       const all = await this.repository.getAll();
-      
+
       return all.some(f => {
-        const fCnpj = f.cnpj.replace(/\D/g, '');
-        return fCnpj === cnpjNumbers && f.id !== excludeId;
+        const fCnpj = String(f?.cnpj || '').replace(/\D/g, '');
+        return Boolean(fCnpj) && fCnpj === cnpjNumbers && f.id !== excludeId;
       });
     } catch (error) {
       console.error('[FornecedoresService] Erro ao verificar CNPJ:', error);
@@ -140,6 +147,14 @@ export class FornecedoresService {
       const existing = await this.repository.getById(id);
       if (!existing) {
         throw new Error(`Fornecedor ${id} não encontrado`);
+      }
+
+      // Ao reparar/editar CNPJ, impedir duplicidade com outro fornecedor.
+      if (data.cnpj) {
+        const cnpjExists = await this.checkCNPJExists(data.cnpj, id);
+        if (cnpjExists) {
+          throw new Error('CNPJ já cadastrado para outro fornecedor');
+        }
       }
 
       // Criar nova instância com dados atualizados

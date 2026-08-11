@@ -257,6 +257,14 @@ setupEventListeners() {
   close(result) {
     this.overlay.classList.remove('modal-active');
 
+    // Restaurar o conteúdo padrão do body. Modal.show() substitui o body
+    // por conteúdo customizado; sem esta restauração, confirm()/alert()
+    // deixam de encontrar .modal-message em uma abertura posterior.
+    const bodyEl = this.overlay.querySelector('.modal-body');
+    if (bodyEl) {
+      bodyEl.innerHTML = '<p class="modal-message"></p>';
+    }
+
     // Restaurar footer e ícone
     const footerEl = this.overlay.querySelector('.modal-footer');
     footerEl.style.display = '';

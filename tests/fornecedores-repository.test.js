@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Testes para FornecedoresRepository
  */
 
@@ -7,6 +7,30 @@ import { FornecedoresRepository } from '../src/modules/compras/repositories/Forn
 import { Fornecedor } from '../src/modules/compras/models/Fornecedor.js';
 import LocalStorageAdapter from '../src/core/storage/LocalStorageAdapter.js';
 import StateManager from '../src/core/state/StateManager.js';
+
+let __cnpjTesteSeq = 1;
+
+function gerarCnpjTeste() {
+  const raiz = String(__cnpjTesteSeq++).padStart(8, '0');
+  const base = `${raiz}0001`;
+
+  const calcularDigito = (numeros, pesos) => {
+    const soma = numeros
+      .split('')
+      .reduce((acc, numero, index) => acc + Number(numero) * pesos[index], 0);
+
+    const resto = soma % 11;
+    return resto < 2 ? 0 : 11 - resto;
+  };
+
+  const d1 = calcularDigito(base, [5,4,3,2,9,8,7,6,5,4,3,2]);
+  const d2 = calcularDigito(
+    `${base}${d1}`,
+    [6,5,4,3,2,9,8,7,6,5,4,3,2]
+  );
+
+  return `${base}${d1}${d2}`;
+}
 
 describe('FornecedoresRepository', () => {
   let repository;
@@ -54,7 +78,8 @@ describe('FornecedoresRepository', () => {
   describe('save', () => {
     it('deve salvar fornecedor válido', async () => {
       const fornecedor = new Fornecedor({
-        nome: 'Fornecedor Teste',
+        cnpj: gerarCnpjTeste(),
+      nome: 'Fornecedor Teste',
         telefone: '(11) 98765-4321',
         email: 'teste@fornecedor.com'
       });
@@ -73,13 +98,15 @@ describe('FornecedoresRepository', () => {
 
     it('deve lançar erro se fornecedor com mesmo nome já existir', async () => {
       const fornecedor1 = new Fornecedor({
-        nome: 'Fornecedor Duplicado'
+        cnpj: gerarCnpjTeste(),
+      nome: 'Fornecedor Duplicado'
       });
 
       await repository.save(fornecedor1);
 
       const fornecedor2 = new Fornecedor({
-        nome: 'Fornecedor Duplicado'
+        cnpj: gerarCnpjTeste(),
+      nome: 'Fornecedor Duplicado'
       });
 
       await expect(repository.save(fornecedor2))
@@ -88,13 +115,15 @@ describe('FornecedoresRepository', () => {
 
     it('deve ignorar case ao verificar duplicatas', async () => {
       const fornecedor1 = new Fornecedor({
-        nome: 'Fornecedor Teste'
+        cnpj: gerarCnpjTeste(),
+      nome: 'Fornecedor Teste'
       });
 
       await repository.save(fornecedor1);
 
       const fornecedor2 = new Fornecedor({
-        nome: 'FORNECEDOR TESTE'
+        cnpj: gerarCnpjTeste(),
+      nome: 'FORNECEDOR TESTE'
       });
 
       await expect(repository.save(fornecedor2))
@@ -103,7 +132,8 @@ describe('FornecedoresRepository', () => {
 
     it('deve atualizar state após salvar', async () => {
       const fornecedor = new Fornecedor({
-        nome: 'Fornecedor State'
+        cnpj: gerarCnpjTeste(),
+      nome: 'Fornecedor State'
       });
 
       await repository.save(fornecedor);
@@ -117,7 +147,8 @@ describe('FornecedoresRepository', () => {
   describe('getById', () => {
     it('deve buscar fornecedor por ID', async () => {
       const fornecedor = new Fornecedor({
-        nome: 'Fornecedor Busca'
+        cnpj: gerarCnpjTeste(),
+      nome: 'Fornecedor Busca'
       });
 
       await repository.save(fornecedor);
@@ -148,11 +179,13 @@ describe('FornecedoresRepository', () => {
 
     it('deve retornar todos os fornecedores', async () => {
       const fornecedor1 = new Fornecedor({
-        nome: 'Fornecedor 1'
+        cnpj: gerarCnpjTeste(),
+      nome: 'Fornecedor 1'
       });
 
       const fornecedor2 = new Fornecedor({
-        nome: 'Fornecedor 2'
+        cnpj: gerarCnpjTeste(),
+      nome: 'Fornecedor 2'
       });
 
       await repository.save(fornecedor1);
@@ -167,12 +200,14 @@ describe('FornecedoresRepository', () => {
 
     it('deve retornar fornecedores ativos e inativos', async () => {
       const fornecedor1 = new Fornecedor({
-        nome: 'Fornecedor Ativo',
+        cnpj: gerarCnpjTeste(),
+      nome: 'Fornecedor Ativo',
         ativo: true
       });
 
       const fornecedor2 = new Fornecedor({
-        nome: 'Fornecedor Inativo',
+        cnpj: gerarCnpjTeste(),
+      nome: 'Fornecedor Inativo',
         ativo: false
       });
 
@@ -188,17 +223,20 @@ describe('FornecedoresRepository', () => {
   describe('getAtivos', () => {
     it('deve retornar apenas fornecedores ativos', async () => {
       const fornecedor1 = new Fornecedor({
-        nome: 'Fornecedor Ativo 1',
+        cnpj: gerarCnpjTeste(),
+      nome: 'Fornecedor Ativo 1',
         ativo: true
       });
 
       const fornecedor2 = new Fornecedor({
-        nome: 'Fornecedor Inativo',
+        cnpj: gerarCnpjTeste(),
+      nome: 'Fornecedor Inativo',
         ativo: false
       });
 
       const fornecedor3 = new Fornecedor({
-        nome: 'Fornecedor Ativo 2',
+        cnpj: gerarCnpjTeste(),
+      nome: 'Fornecedor Ativo 2',
         ativo: true
       });
 
@@ -214,7 +252,8 @@ describe('FornecedoresRepository', () => {
 
     it('deve retornar array vazio se não houver fornecedores ativos', async () => {
       const fornecedor = new Fornecedor({
-        nome: 'Fornecedor Inativo',
+        cnpj: gerarCnpjTeste(),
+      nome: 'Fornecedor Inativo',
         ativo: false
       });
 
@@ -229,7 +268,8 @@ describe('FornecedoresRepository', () => {
   describe('update', () => {
     it('deve atualizar fornecedor existente', async () => {
       const fornecedor = new Fornecedor({
-        nome: 'Fornecedor Original',
+        cnpj: gerarCnpjTeste(),
+      nome: 'Fornecedor Original',
         telefone: '(11) 98765-4321'
       });
 
@@ -249,7 +289,8 @@ describe('FornecedoresRepository', () => {
 
     it('deve lançar erro se ID não for fornecido', async () => {
       const fornecedor = new Fornecedor({
-        nome: 'Fornecedor Teste'
+        cnpj: gerarCnpjTeste(),
+      nome: 'Fornecedor Teste'
       });
 
       await expect(repository.update(null, fornecedor))
@@ -263,7 +304,8 @@ describe('FornecedoresRepository', () => {
 
     it('deve lançar erro se fornecedor não existir', async () => {
       const fornecedor = new Fornecedor({
-        nome: 'Fornecedor Teste'
+        cnpj: gerarCnpjTeste(),
+      nome: 'Fornecedor Teste'
       });
 
       await expect(repository.update('id_inexistente', fornecedor))
@@ -272,7 +314,8 @@ describe('FornecedoresRepository', () => {
 
     it('deve permitir atualizar para mesmo nome', async () => {
       const fornecedor = new Fornecedor({
-        nome: 'Fornecedor Teste',
+        cnpj: gerarCnpjTeste(),
+      nome: 'Fornecedor Teste',
         telefone: '(11) 98765-4321'
       });
 
@@ -289,11 +332,13 @@ describe('FornecedoresRepository', () => {
 
     it('deve lançar erro se tentar atualizar para nome já existente', async () => {
       const fornecedor1 = new Fornecedor({
-        nome: 'Fornecedor 1'
+        cnpj: gerarCnpjTeste(),
+      nome: 'Fornecedor 1'
       });
 
       const fornecedor2 = new Fornecedor({
-        nome: 'Fornecedor 2'
+        cnpj: gerarCnpjTeste(),
+      nome: 'Fornecedor 2'
       });
 
       await repository.save(fornecedor1);
@@ -308,7 +353,8 @@ describe('FornecedoresRepository', () => {
 
     it('deve atualizar atualizadoEm', async () => {
       const fornecedor = new Fornecedor({
-        nome: 'Fornecedor Teste'
+        cnpj: gerarCnpjTeste(),
+      nome: 'Fornecedor Teste'
       });
 
       await repository.save(fornecedor);
@@ -329,7 +375,8 @@ describe('FornecedoresRepository', () => {
   describe('delete', () => {
     it('deve remover fornecedor existente', async () => {
       const fornecedor = new Fornecedor({
-        nome: 'Fornecedor Remover'
+        cnpj: gerarCnpjTeste(),
+      nome: 'Fornecedor Remover'
       });
 
       await repository.save(fornecedor);
@@ -352,7 +399,8 @@ describe('FornecedoresRepository', () => {
 
     it('deve atualizar state após remover', async () => {
       const fornecedor = new Fornecedor({
-        nome: 'Fornecedor State'
+        cnpj: gerarCnpjTeste(),
+      nome: 'Fornecedor State'
       });
 
       await repository.save(fornecedor);
@@ -366,7 +414,8 @@ describe('FornecedoresRepository', () => {
   describe('findByNome', () => {
     it('deve buscar fornecedor por nome exato', async () => {
       const fornecedor = new Fornecedor({
-        nome: 'Fornecedor Específico'
+        cnpj: gerarCnpjTeste(),
+      nome: 'Fornecedor Específico'
       });
 
       await repository.save(fornecedor);
@@ -379,7 +428,8 @@ describe('FornecedoresRepository', () => {
 
     it('deve ignorar case na busca', async () => {
       const fornecedor = new Fornecedor({
-        nome: 'Fornecedor Teste'
+        cnpj: gerarCnpjTeste(),
+      nome: 'Fornecedor Teste'
       });
 
       await repository.save(fornecedor);
@@ -404,15 +454,18 @@ describe('FornecedoresRepository', () => {
   describe('searchByNome', () => {
     it('deve buscar fornecedores por nome parcial', async () => {
       const fornecedor1 = new Fornecedor({
-        nome: 'Fornecedor ABC'
+        cnpj: gerarCnpjTeste(),
+      nome: 'Fornecedor ABC'
       });
 
       const fornecedor2 = new Fornecedor({
-        nome: 'Fornecedor XYZ'
+        cnpj: gerarCnpjTeste(),
+      nome: 'Fornecedor XYZ'
       });
 
       const fornecedor3 = new Fornecedor({
-        nome: 'Outro Fornecedor ABC'
+        cnpj: gerarCnpjTeste(),
+      nome: 'Outro Fornecedor ABC'
       });
 
       await repository.save(fornecedor1);
@@ -427,7 +480,8 @@ describe('FornecedoresRepository', () => {
 
     it('deve ignorar case na busca', async () => {
       const fornecedor = new Fornecedor({
-        nome: 'Fornecedor Teste'
+        cnpj: gerarCnpjTeste(),
+      nome: 'Fornecedor Teste'
       });
 
       await repository.save(fornecedor);

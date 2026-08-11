@@ -25,6 +25,7 @@ const validatePhone = (phone) => {
  * @typedef {Object} FornecedorData
  * @property {string} [id] - ID único do fornecedor
  * @property {string} nome - Nome do fornecedor
+ * @property {string} [cnpj] - CNPJ do fornecedor (obrigatório para novos cadastros)
  * @property {string} [telefone] - Telefone do fornecedor
  * @property {string} [email] - Email do fornecedor
  * @property {string} [endereco] - Endereço do fornecedor
@@ -41,6 +42,9 @@ export class Fornecedor {
   constructor(data) {
     this.id = data.id || this.generateId();
     this.nome = data.nome;
+    // Compatibilidade: registros legados podem não possuir CNPJ.
+    // Novos cadastros continuam exigindo CNPJ no formulário.
+    this.cnpj = data.cnpj || '';
     this.telefone = data.telefone || '';
     this.email = data.email || '';
     this.endereco = data.endereco || '';
@@ -73,6 +77,15 @@ export class Fornecedor {
 
     if (this.nome && typeof this.nome === 'string' && this.nome.trim().length < 2) {
       errors.push('nome deve ter pelo menos 2 caracteres');
+    }
+
+    // Validar CNPJ quando existir. Registros legados sem CNPJ precisam
+    // continuar carregando para que possam ser reparados pela edição.
+    if (this.cnpj) {
+      const cnpjNumbers = this.cnpj.replace(/\D/g, '');
+      if (cnpjNumbers.length !== 14) {
+        errors.push('CNPJ deve ter 14 dígitos');
+      }
     }
 
     // Validar email (se fornecido)
@@ -126,6 +139,7 @@ export class Fornecedor {
     return {
       id: this.id,
       nome: this.nome,
+      cnpj: this.cnpj,
       telefone: this.telefone,
       email: this.email,
       endereco: this.endereco,

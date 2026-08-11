@@ -1,9 +1,12 @@
-import { describe, it, expect } from 'vitest';
+﻿import { describe, it, expect } from 'vitest';
 import { Fornecedor } from '../src/modules/compras/models/Fornecedor.js';
 
 describe('Fornecedor Model', () => {
   const fornecedorValidoData = {
     nome: 'Fornecedor Teste Ltda',
+    cnpj: '11.222.333/0001-81',
+
+    cnpj: '11.222.333/0001-81',
     telefone: '(11) 98765-4321',
     email: 'contato@fornecedor.com',
     endereco: 'Rua Teste, 123 - São Paulo/SP'
@@ -52,7 +55,7 @@ describe('Fornecedor Model', () => {
     });
 
     it('deve definir campos opcionais como string vazia se não fornecidos', () => {
-      const data = { nome: 'Fornecedor Simples' };
+      const data = { nome: 'Fornecedor Simples', cnpj: '22.333.444/0001-05' };
       const fornecedor = new Fornecedor(data);
 
       expect(fornecedor.telefone).toBe('');
@@ -243,6 +246,8 @@ describe('Fornecedor Model', () => {
       expect(json).toEqual({
         id: fornecedor.id,
         nome: 'Fornecedor Teste Ltda',
+
+        cnpj: '11.222.333/0001-81',
         telefone: '(11) 98765-4321',
         email: 'contato@fornecedor.com',
         endereco: 'Rua Teste, 123 - São Paulo/SP',
@@ -262,3 +267,4 @@ describe('Fornecedor Model', () => {
     });
   });
 });
+

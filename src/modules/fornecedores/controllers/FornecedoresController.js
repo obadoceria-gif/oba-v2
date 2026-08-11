@@ -47,13 +47,13 @@ export class FornecedoresController {
    * Conecta listeners de eventos da view
    */
   attachViewListeners() {
-    // Eventos de CRUD
-    this.view.on('fornecedor:create', (data) => this.handleCreateFornecedor(data));
-    this.view.on('fornecedor:update', ({ id, data }) => this.handleUpdateFornecedor(id, data));
-    this.view.on('fornecedor:delete', ({ id }) => this.handleDeleteFornecedor(id));
-    this.view.on('fornecedor:desativar', ({ id }) => this.handleDesativarFornecedor(id));
-    this.view.on('fornecedor:ativar', ({ id }) => this.handleAtivarFornecedor(id));
-    
+// Eventos de CRUD
+this.view.on('fornecedor:create', (data) => this.handleCreateFornecedor(data));
+this.view.on('fornecedor:update', ({ id, data }) => this.handleUpdateFornecedor(id, data));
+this.view.on('fornecedor:requestEdit', ({ id }) => this.handleRequestEditFornecedor(id));
+this.view.on('fornecedor:delete', ({ id }) => this.handleDeleteFornecedor(id));
+this.view.on('fornecedor:desativar', ({ id }) => this.handleDesativarFornecedor(id));
+this.view.on('fornecedor:ativar', ({ id }) => this.handleAtivarFornecedor(id));    
     // Eventos de navegação
     this.view.on('fornecedor:select', ({ id }) => this.handleSelectFornecedor(id));
     this.view.on('fornecedor:search', ({ termo }) => this.handleSearchFornecedores(termo));
@@ -86,31 +86,52 @@ export class FornecedoresController {
       this.view.showError(error.message || 'Erro ao criar fornecedor');
     }
   }
+/**
+ * Handler para solicitar edição de fornecedor
+ * @param {string} id - ID do fornecedor
+ */
+async handleRequestEditFornecedor(id) {
+  try {
+    const fornecedor = await this.service.getFornecedorById(id);
 
-  /**
-   * Handler para atualizar fornecedor
-   * @param {string} id - ID do fornecedor
-   * @param {Object} data - Dados atualizados
-   */
-  async handleUpdateFornecedor(id, data) {
-    try {
-      this.view.showLoading('Atualizando fornecedor...');
-
-      const fornecedor = await this.service.updateFornecedor(id, data);
-
-      this.view.hideLoading();
-      this.view.showSuccess('Fornecedor atualizado com sucesso!');
-
-      // Recarregar lista
-      await this.handleLoadFornecedores();
-
-    } catch (error) {
-      this.view.hideLoading();
-      console.error('[FornecedoresController] Erro ao atualizar fornecedor:', error);
-      this.view.showError(error.message || 'Erro ao atualizar fornecedor');
+    if (!fornecedor) {
+      this.view.showError('Fornecedor não encontrado');
+      return;
     }
-  }
 
+    this.view.showEditFormWithData(fornecedor);
+  } catch (error) {
+    console.error(
+      '[FornecedoresController] Erro ao carregar fornecedor para edição:',
+      error
+    );
+
+    this.view.showError('Erro ao carregar fornecedor para edição');
+  }
+}
+
+/**
+ * Handler para atualizar fornecedor
+ * @param {string} id - ID do fornecedor
+ * @param {Object} data - Dados atualizados
+ */
+async handleUpdateFornecedor(id, data) {
+  try {
+    this.view.showLoading('Atualizando fornecedor...');
+
+    const fornecedor = await this.service.updateFornecedor(id, data);
+
+    this.view.hideLoading();
+    this.view.showSuccess('Fornecedor atualizado com sucesso!');
+
+    // Recarregar lista
+    await this.handleLoadFornecedores();
+  } catch (error) {
+    this.view.hideLoading();
+    console.error('[FornecedoresController] Erro ao atualizar fornecedor:', error);
+    this.view.showError(error.message || 'Erro ao atualizar fornecedor');
+  }
+}
   /**
    * Handler para excluir fornecedor
    * @param {string} id - ID do fornecedor
