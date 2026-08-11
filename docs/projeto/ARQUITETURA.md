@@ -1,57 +1,100 @@
-﻿# ARQUITETURA OFICIAL - GESTAO OBA DOCERIA
+# ARQUITETURA OFICIAL - GESTÃO OBA DOCERIA
 
-Atualizado em: 2026-08-10
+Atualizado em: 2026-08-11
 
-## 1. Stack confirmada
+## 1. Stack
 - JavaScript ES Modules.
 - Vite.
 - Vitest.
-- fast-check para property-based tests.
-- IndexedDB e localStorage como mecanismos de persistencia existentes no Core.
-- UUID como dependencia.
+- fast-check.
+- UUID.
+- IndexedDB/localStorage por adaptadores do Core.
 
-## 2. Estrutura principal
-`src/App.js` orquestra a aplicacao.
-`src/main.js` e o ponto de entrada.
-`src/core/` concentra infraestrutura compartilhada.
-`src/modules/` concentra dominios funcionais.
+## 2. Pontos de entrada
+- `src/main.js`: inicialização da aplicação.
+- `src/App.js`: composição, controllers, menu, navegação e montagem das views.
+- `src/core/`: infraestrutura compartilhada.
+- `src/modules/`: domínios funcionais.
 
-## 3. Camadas
-O padrao predominante dos modulos e:
-View -> Controller -> Service -> Model/Repository -> Storage
+## 3. Padrão predominante por módulo
+`View -> Controller -> Service -> Repository/Model -> Storage`
 
-Componentes de UI reutilizaveis ficam em `components/`.
-Estilos especificos ficam em `styles/`.
+Nem todo módulo utiliza todas as camadas da mesma forma, mas essa é a arquitetura alvo a preservar.
 
 ## 4. Core confirmado
-- `core/events/`: EventBus e tipos de eventos.
-- `core/state/`: StateManager e slices.
-- `core/storage/`: IndexedDBAdapter, LocalStorageAdapter e StorageAdapter.
-- `core/ui/`: Loading, Modal, Toast e CSS compartilhado.
-- `core/validators/`: validadores e motor de validacao.
-- `core/utils/`: moeda, data e formatacao.
-- `core/filters/`: busca e filtros.
-- `core/reports/`: infraestrutura de relatorios.
+- `core/events/`: EventBus e tipos de eventos;
+- `core/state/`: StateManager e slices;
+- `core/storage/`: adapters de IndexedDB/localStorage;
+- `core/ui/`: Modal, Loading, Toast e CSS compartilhado;
+- `core/validators/`: validação;
+- `core/utils/`: formatação de moeda, data e valores;
+- `core/filters/`: busca/filtros;
+- `core/reports/`: geração/templates de relatórios.
 
-## 5. Modulos presentes no codigo atual
-- Dashboard.
-- Insumos.
-- Compras.
-- Estoque.
-- Fichas Tecnicas.
-- Fornecedores.
-- Producao.
+## 5. Módulos ativos conectados ao App
+A inspeção dos imports e `switch` de navegação de `src/App.js` confirma:
+- Dashboard;
+- Insumos;
+- Estoque;
+- Compras;
+- Fornecedores;
+- Fichas Técnicas;
+- Produção.
 
-Modulos citados apenas em documentos antigos nao serao considerados implementados ate aparecerem no codigo atual ou serem recuperados de outra fonte verificada.
+Esses são os únicos módulos considerados ativos até nova integração explícita.
 
-## 6. Fluxo de dados esperado
-Acao do usuario -> View -> Controller -> Service -> Repository -> Storage.
-EventBus e StateManager podem participar da sincronizacao entre partes da aplicacao.
+## 6. Estado sem módulo navegável
+O estado central contém estruturas como `clientes` e `pedidos`. Isso representa preparação/legado de integração, não prova de módulo concluído.
 
-## 7. Regra de evolucao
-Nao remover camadas ou reestruturar a arquitetura apenas para corrigir um bug local.
-Simplificacoes arquiteturais exigem decisao registrada, teste de impacto e plano de migracao.
+Qualquer novo domínio só será classificado como ativo quando houver, no mínimo:
+- rota/menu ou entrada equivalente;
+- view montável;
+- controller/serviço necessário;
+- persistência coerente;
+- fluxo funcional testável.
 
-## 8. Arquivos alternativos
-Arquivos `.bak`, `*_CORRIGIDO.*`, diagnosticos e standalones nao sao considerados codigo ativo por padrao.
-O arquivo ativo e o importado pela aplicacao executada; a confirmacao deve ser feita por imports, rotas e comportamento em runtime.
+## 7. Referências externas à arquitetura ativa
+### Produção/histórico
+Usar para recuperar comportamento, UX, regras e fluxos já implementados.
+
+### `oba_doceria`
+Sistema monolítico histórico. Não migrar o HTML inteiro para a base modular. Extrair somente regras, estruturas de dados, validações, textos e padrões de interação úteis.
+
+### `Projeto_GPT_Plus`
+Outra tentativa de modularização. Pode fornecer trechos mais fáceis de adaptar que o HTML monolítico, mas não volta a ser base ativa.
+
+## 8. Regra para recuperação de funcionalidade
+1. identificar comportamento da referência;
+2. localizar dados e regras envolvidos;
+3. mapear para o domínio modular correto;
+4. implementar/adaptar sem quebrar contratos existentes;
+5. criar/atualizar testes;
+6. integrar ao `App.js` somente quando o fluxo estiver consistente.
+
+## 9. Integrações críticas
+Arquitetura deve suportar e testar:
+- Compras -> Estoque;
+- Estoque -> Fichas Técnicas;
+- Fichas Técnicas -> Produção;
+- Produção -> Estoque;
+- futuros Clientes/Pedidos/Vendas -> Financeiro;
+- Backup -> restauração de todas as coleções necessárias.
+
+## 10. Código alternativo e órfão
+Arquivos `.bak`, `*_CORRIGIDO.*`, standalones e diagnósticos não são código oficial por padrão.
+
+Regra:
+- descobrir o arquivo realmente importado;
+- comparar versão alternativa;
+- recuperar somente diferenças úteis;
+- remover da árvore oficial apenas após backup e commit seguro.
+
+Exemplos atualmente observados:
+- `src/core/ui/Modal.js.bak`;
+- `src/modules/fornecedores/views/FornecedoresView.js.bak`;
+- `src/modules/fornecedores/views/FornecedoresView_CORRIGIDO.js`.
+
+## 11. Arquitetura de entrega alvo
+`GitHub (fonte oficial) -> Cloudflare Pages (deploy automático) -> produção`
+
+Desenvolvimento local deixa de ser fonte única. Qualquer máquina poderá clonar o repositório e continuar o trabalho.

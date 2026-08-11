@@ -1,64 +1,133 @@
-﻿# ROADMAP - GESTAO OBA DOCERIA
+# ROADMAP - GESTÃO OBA DOCERIA
 
-Atualizado em: 2026-08-10
+Atualizado em: 2026-08-11
 
-## Fase 0 - Baseline e controle
-Status: EM ANDAMENTO
+## Fase 0 - Baseline e governança
+Status: CONCLUÍDA
 
-- [x] Identificar `oba-v2` como base de trabalho.
+- [x] Definir `oba-v2` como base oficial.
 - [x] Criar snapshot externo.
-- [x] Inventariar `src/`.
-- [x] Auditar arquivos nao rastreados.
-- [x] Auditar documentacao estrategica.
+- [x] Inventariar código.
+- [x] Auditar documentação e histórico.
 - [x] Inicializar Git local.
-- [ ] Criar documentacao canonica.
-- [ ] Definir selecao do primeiro commit.
-- [ ] Criar primeiro commit e tag de baseline.
+- [x] Criar documentação canônica.
+- [x] Criar primeiro commit de baseline.
+- [x] Criar tag `baseline-oba-v2-20260810`.
+- [x] Criar branch `fix/estabilizacao-fornecedores`.
 
-## Fase 1 - Estabilizacao funcional
-Status: EM ANDAMENTO
+## Fase 1 - Fechar Fornecedores
+Status: QUASE CONCLUÍDA
 
-### Fornecedores
-- [x] Corrigir fechamento indevido de modal.
-- [x] Corrigir mascara de CNPJ ao apagar.
-- [x] Corrigir loading preso na criacao.
-- [x] Corrigir fechamento da tela de detalhes.
-- [ ] Finalizar Editar Fornecedor.
-- [ ] Testar criar, visualizar, editar, ativar/desativar e excluir.
-- [ ] Testar filtros, busca, CNPJ duplicado e validacoes.
-- [ ] Executar regressao de navegacao.
+- [x] Corrigir congelamento/navegação.
+- [x] Corrigir fechamento de modal por clique fora.
+- [x] Corrigir X/Cancelar.
+- [x] Corrigir máscara de CNPJ.
+- [x] Corrigir persistência do CNPJ no model.
+- [x] Corrigir proteção para registros sem CNPJ.
+- [x] Corrigir loading preso.
+- [x] Corrigir edição.
+- [x] Corrigir exclusão/modal de confirmação.
+- [x] Teste manual principal reportado como funcional.
+- [ ] Rodar testes automatizados direcionados de Fornecedores.
+- [ ] Revisar `git diff`.
+- [ ] Commitar checkpoint de Fornecedores.
+- [ ] Opcional P2: melhorar tela de detalhes sem bloquear avanço.
 
-### Demais modulos
-- [ ] Auditar Insumos.
-- [ ] Auditar Compras.
-- [ ] Auditar Estoque.
-- [ ] Auditar Fichas Tecnicas.
-- [ ] Auditar Producao.
-- [ ] Auditar Dashboard.
+## Fase 2 - Auditoria funcional dos módulos ativos
+Status: PRÓXIMA
 
-## Fase 2 - Integracoes criticas
-- [ ] Compra -> entrada automatica no estoque.
-- [ ] Recalculo de saldo e custo medio.
-- [ ] Estoque -> baixa por producao.
-- [ ] Rejeicao de producao com estoque insuficiente.
-- [ ] Testes integrados desses fluxos.
+Auditar automaticamente e depois testar somente gaps encontrados:
+- [ ] Dashboard.
+- [ ] Insumos.
+- [ ] Compras.
+- [ ] Estoque.
+- [ ] Fichas Técnicas.
+- [ ] Produção.
 
-## Fase 3 - Comparacao e recuperacao
-- [ ] Comparar oba-v2 com a versao publicada no Cloudflare.
-- [ ] Comparar oba-v2 com Projeto_GPT_Plus.
-- [ ] Catalogar funcionalidades ausentes.
-- [ ] Recuperar somente o que for validado como necessario.
+Fornecedores entra apenas em regressão, não em nova reconstrução.
 
-## Fase 4 - Expansao
-Prioridades serao definidas pelas necessidades operacionais reais da doceria.
-Possiveis dominios: clientes, pedidos/encomendas, vendas, financeiro, cartoes, relatorios e backup aprimorado.
+Saída obrigatória desta fase:
+- tabela PRONTO / PARCIAL / BLOQUEADO;
+- lista P0/P1/P2;
+- testes existentes por módulo;
+- código órfão/duplicado relevante;
+- dependências entre módulos.
 
-## Fase 5 - Release
-- [ ] Testes automatizados aprovados.
-- [ ] Fluxos criticos aprovados manualmente.
+## Fase 3 - Integrações críticas
+Status: PENDENTE
+
+- [ ] Compra aprovada gera/atualiza movimentação de estoque corretamente.
+- [ ] Custo/saldo após compra é consistente.
+- [ ] Ficha Técnica usa insumos/custos corretos.
+- [ ] Produção valida estoque disponível.
+- [ ] Produção gera baixas/movimentações corretas.
+- [ ] Navegação entre os módulos não acumula listeners/modais/overlays.
+- [ ] Persistência sobrevive a reload.
+
+## Fase 4 - Recuperação funcional orientada por referências
+Status: PENDENTE
+
+Validar e recuperar, conforme prioridade operacional:
+- [ ] Clientes.
+- [ ] Encomendas/Pedidos.
+- [ ] Vendas.
+- [ ] Financeiro.
+- [ ] Cartões como domínio/fluxo completo, se necessário.
+- [ ] Relatórios completos.
+- [ ] Backup/restauração completos.
+
+Regra: pesquisar primeiro produção, `oba_doceria`/V90/Vxx e `Projeto_GPT_Plus`; criar do zero somente quando não houver base aproveitável.
+
+## Fase 5 - Consolidação visual
+Status: PENDENTE
+
+- [ ] Usar a versão publicada/histórica como referência de identidade visual.
+- [ ] Uniformizar componentes, formulários, modais e tabelas.
+- [ ] Melhorar responsividade.
+- [ ] Remover aparência provisória/inconsistente.
+- [ ] Não redesenhar módulos estáveis sem benefício operacional claro.
+
+## Fase 6 - Saneamento técnico
+Status: PENDENTE
+
+- [ ] Classificar/remover da árvore ativa `.bak` e `*_CORRIGIDO` já absorvidos.
+- [ ] Separar material histórico da fonte oficial.
+- [ ] Validar imports órfãos.
+- [ ] Validar listeners e ciclo destroy/mount.
+- [ ] Reduzir duplicações entre módulos.
+- [ ] Atualizar testes que não representam mais o comportamento oficial.
+
+## Fase 7 - GitHub e Cloudflare
+Status: PENDENTE
+
+- [ ] Definir repositório GitHub oficial do `oba-v2`.
+- [ ] Configurar `origin`.
+- [ ] Publicar branch principal consolidada.
+- [ ] Configurar Cloudflare Pages conectado ao GitHub.
+- [ ] Definir comando de build e diretório de saída.
+- [ ] Validar deploy automático em ambiente controlado.
+- [ ] Confirmar domínio `oba-doceria.pages.dev` apontando para a base correta.
+
+## Fase 8 - Release
+Status: PENDENTE
+
+- [ ] `npm test` aprovado.
+- [ ] testes dos fluxos críticos aprovados.
 - [ ] `npm run build` aprovado.
-- [ ] Preview da build aprovado.
-- [ ] Backup antes do deploy.
-- [ ] Deploy.
-- [ ] Smoke test em producao.
-- [ ] Tag da versao publicada.
+- [ ] preview da build aprovado.
+- [ ] backup de dados antes do deploy.
+- [ ] deploy.
+- [ ] smoke test em produção.
+- [ ] rollback documentado/testável.
+- [ ] tag da versão publicada.
+- [ ] documentação final atualizada.
+
+## Ordem operacional imediata
+1. Fechar commit de Fornecedores.
+2. Auditar os 6 módulos ativos restantes em lote.
+3. Corrigir P0/P1 em lote, priorizando integração.
+4. Validar fluxos críticos.
+5. Recuperar módulos ausentes por prioridade.
+6. Consolidar visual.
+7. Conectar GitHub/Cloudflare.
+8. Release.
