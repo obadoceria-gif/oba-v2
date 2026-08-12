@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Testes para Insumo Model
  * 
  * Valida:
@@ -243,7 +243,9 @@ describe('Insumo Model', () => {
       const data = {
         id: 'insumo-1',
         nome: 'Farinha de Trigo',
+        marca: '',
         unidade: 'kg',
+        quantidadePorEmbalagem: 0,
         custoUnitario: 850,
         fornecedor: 'Fornecedor A',
         estoqueMinimo: 10,

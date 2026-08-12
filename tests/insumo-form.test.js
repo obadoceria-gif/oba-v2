@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Testes para InsumoForm Component
  */
 
@@ -240,7 +240,9 @@ describe('InsumoForm', () => {
       form.on('create', handler);
 
       container.querySelector('#nome').value = 'Farinha';
+    container.querySelector('#marca').value = 'Marca Teste';
       container.querySelector('#unidade').value = 'kg';
+    container.querySelector('#quantidadePorEmbalagem').value = '1';
       container.querySelector('#custoUnitario').value = '500';
 
       const formElement = container.querySelector('#insumo-form');
@@ -248,7 +250,9 @@ describe('InsumoForm', () => {
 
       expect(handler).toHaveBeenCalledWith({
         nome: 'Farinha',
+      marca: 'Marca Teste',
         unidade: 'kg',
+      quantidadePorEmbalagem: 1,
         custoUnitario: 500,
         fornecedor: '',
         estoqueMinimo: 0,
@@ -263,7 +267,9 @@ describe('InsumoForm', () => {
       form.populate({
         id: 'insumo-1',
         nome: 'Farinha',
+      marca: 'Marca Teste',
         unidade: 'kg',
+      quantidadePorEmbalagem: 1,
         custoUnitario: 500
       });
 
