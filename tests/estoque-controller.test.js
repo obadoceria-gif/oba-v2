@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Testes para EstoqueController
  */
 
@@ -9,6 +9,8 @@ describe('EstoqueController', () => {
   let controller;
   let mockService;
   let mockView;
+  let mockToast;
+  let mockLoading;
 
   beforeEach(() => {
     // Mock do service
@@ -35,7 +37,20 @@ describe('EstoqueController', () => {
       showEstoqueDetails: vi.fn()
     };
 
+    mockToast = {
+      success: vi.fn(),
+      error: vi.fn(),
+      warning: vi.fn()
+    };
+
+    mockLoading = {
+      show: vi.fn(() => 'loading-test'),
+      hide: vi.fn()
+    };
+
     controller = new EstoqueController(mockService, mockView);
+    controller.toast = mockToast;
+    controller.loading = mockLoading;
   });
 
   describe('Constructor', () => {
@@ -80,10 +95,10 @@ describe('EstoqueController', () => {
 
       const response = await controller.handleCreateMovimentacao(data);
 
-      expect(mockView.showLoading).toHaveBeenCalledWith('Criando movimentação...');
+      expect(controller.loading.show).toHaveBeenCalledWith('Criando movimentação...');
       expect(mockService.createMovimentacao).toHaveBeenCalledWith(data);
-      expect(mockView.hideLoading).toHaveBeenCalled();
-      expect(mockView.showSuccess).toHaveBeenCalledWith('Movimentação de entrada criada com sucesso!');
+      expect(controller.loading.hide).toHaveBeenCalled();
+      expect(controller.toast.success).toHaveBeenCalledWith('Movimentação de entrada criada com sucesso!');
       expect(mockService.getAllEstoques).toHaveBeenCalled();
       expect(mockService.getMovimentacoes).toHaveBeenCalledWith({ insumoId: 'insumo-1' });
       expect(response).toEqual(result);
@@ -105,7 +120,7 @@ describe('EstoqueController', () => {
 
       await controller.handleCreateMovimentacao(data);
 
-      expect(mockView.showSuccess).toHaveBeenCalledWith('Movimentação de saida criada com sucesso!');
+      expect(controller.toast.success).toHaveBeenCalledWith('Movimentação de saida criada com sucesso!');
     });
 
     it('deve mostrar erro se criação falhar', async () => {
@@ -115,8 +130,8 @@ describe('EstoqueController', () => {
       await expect(controller.handleCreateMovimentacao({}))
         .rejects.toThrow('Estoque insuficiente');
 
-      expect(mockView.hideLoading).toHaveBeenCalled();
-      expect(mockView.showError).toHaveBeenCalledWith('Estoque insuficiente');
+      expect(controller.loading.hide).toHaveBeenCalled();
+      expect(controller.toast.error).toHaveBeenCalledWith('Estoque insuficiente');
     });
   });
 
@@ -128,7 +143,7 @@ describe('EstoqueController', () => {
       const result = await controller.handleCheckEstoqueBaixo(data);
 
       expect(mockService.checkEstoqueBaixo).toHaveBeenCalledWith('insumo-1', 10);
-      expect(mockView.showWarning).toHaveBeenCalledWith('Estoque abaixo do mínimo!');
+      expect(controller.toast.warning).toHaveBeenCalledWith('Estoque abaixo do mínimo!');
       expect(result).toBe(true);
     });
 
@@ -149,7 +164,7 @@ describe('EstoqueController', () => {
       await expect(controller.handleCheckEstoqueBaixo({}))
         .rejects.toThrow('Erro ao verificar');
 
-      expect(mockView.showError).toHaveBeenCalledWith('Erro ao verificar');
+      expect(controller.toast.error).toHaveBeenCalledWith('Erro ao verificar');
     });
   });
 
@@ -164,7 +179,7 @@ describe('EstoqueController', () => {
 
       const result = await controller.handleLoadEstoques();
 
-      expect(mockView.showLoading).toHaveBeenCalledWith('Carregando estoques...');
+      expect(controller.loading.show).toHaveBeenCalledWith('Carregando estoques...');
       expect(mockService.getAllEstoques).toHaveBeenCalled();
       expect(mockView.renderEstoquesList).toHaveBeenCalledWith(estoques);
       expect(result).toEqual(estoques);
@@ -177,7 +192,7 @@ describe('EstoqueController', () => {
       await expect(controller.handleLoadEstoques())
         .rejects.toThrow('Erro ao carregar');
 
-      expect(mockView.showError).toHaveBeenCalledWith('Erro ao carregar');
+      expect(controller.toast.error).toHaveBeenCalledWith('Erro ao carregar');
     });
   });
 
@@ -192,7 +207,7 @@ describe('EstoqueController', () => {
 
       const result = await controller.handleLoadMovimentacoes();
 
-      expect(mockView.showLoading).toHaveBeenCalledWith('Carregando movimentações...');
+      expect(controller.loading.show).toHaveBeenCalledWith('Carregando movimentações...');
       expect(mockService.getMovimentacoes).toHaveBeenCalledWith({});
       expect(mockView.renderMovimentacoesList).toHaveBeenCalledWith(movimentacoes);
       expect(result).toEqual(movimentacoes);
@@ -217,7 +232,7 @@ describe('EstoqueController', () => {
       await expect(controller.handleLoadMovimentacoes())
         .rejects.toThrow('Erro ao carregar');
 
-      expect(mockView.showError).toHaveBeenCalledWith('Erro ao carregar');
+      expect(controller.toast.error).toHaveBeenCalledWith('Erro ao carregar');
     });
   });
 
@@ -244,7 +259,7 @@ describe('EstoqueController', () => {
 
       await controller.handleSelectEstoque('insumo-999');
 
-      expect(mockView.showError).toHaveBeenCalledWith('Estoque não encontrado');
+      expect(controller.toast.error).toHaveBeenCalledWith('Estoque não encontrado');
       expect(mockView.showEstoqueDetails).not.toHaveBeenCalled();
     });
 
@@ -255,7 +270,7 @@ describe('EstoqueController', () => {
       await expect(controller.handleSelectEstoque('insumo-1'))
         .rejects.toThrow('Erro ao buscar');
 
-      expect(mockView.showError).toHaveBeenCalledWith('Erro ao buscar');
+      expect(controller.toast.error).toHaveBeenCalledWith('Erro ao buscar');
     });
   });
 
@@ -278,7 +293,7 @@ describe('EstoqueController', () => {
       await controller.initialize();
 
       expect(consoleSpy).toHaveBeenCalled();
-      expect(mockView.showError).toHaveBeenCalledWith('Erro ao inicializar módulo de estoque');
+      expect(controller.toast.error).toHaveBeenCalledWith('Erro ao inicializar módulo de estoque');
       
       consoleSpy.mockRestore();
     });
@@ -332,3 +347,6 @@ describe('EstoqueController', () => {
     });
   });
 });
+
+
+

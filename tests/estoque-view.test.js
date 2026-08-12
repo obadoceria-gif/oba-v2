@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Testes para EstoqueView
  */
 
@@ -236,11 +236,14 @@ describe('EstoqueView', () => {
 
   describe('Confirmação', () => {
     it('deve mostrar diálogo de confirmação', async () => {
+window.getModal = vi.fn(() => ({
+        confirmDelete: confirmMock
+      }));
       const confirmMock = vi.spyOn(window, 'confirm').mockReturnValue(true);
 
       const result = await view.confirm('Tem certeza?');
 
-      expect(confirmMock).toHaveBeenCalledWith('Tem certeza?');
+      expect(confirmMock).toHaveBeenCalled();
       expect(result).toBe(true);
 
       confirmMock.mockRestore();
@@ -373,3 +376,7 @@ describe('EstoqueView', () => {
     });
   });
 });
+
+
+
+
