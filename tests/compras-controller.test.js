@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Testes para ComprasController
  */
 
@@ -9,6 +9,8 @@ describe('ComprasController', () => {
   let controller;
   let mockService;
   let mockView;
+  let mockToast;
+  let mockLoading;
 
   beforeEach(() => {
     // Mock do service
@@ -21,6 +23,16 @@ describe('ComprasController', () => {
       getComprasByFornecedor: vi.fn(),
       getComprasByStatus: vi.fn(),
       getEstatisticas: vi.fn()
+    };
+
+    mockToast = {
+      success: vi.fn(),
+      error: vi.fn()
+    };
+
+    mockLoading = {
+      show: vi.fn(() => 'loading-test'),
+      hide: vi.fn()
     };
 
     // Mock da view
@@ -37,6 +49,8 @@ describe('ComprasController', () => {
     };
 
     controller = new ComprasController(mockService, mockView);
+    controller.toast = mockToast;
+    controller.loading = mockLoading;
   });
 
   describe('Constructor', () => {
@@ -54,16 +68,15 @@ describe('ComprasController', () => {
       expect(() => new ComprasController(mockService, null))
         .toThrow('ComprasView é obrigatório');
     });
-
-    it('deve registrar event handlers na view', () => {
-      expect(mockView.on).toHaveBeenCalledWith('createCompra', expect.any(Function));
-      expect(mockView.on).toHaveBeenCalledWith('confirmarCompra', expect.any(Function));
-      expect(mockView.on).toHaveBeenCalledWith('cancelarCompra', expect.any(Function));
-      expect(mockView.on).toHaveBeenCalledWith('loadCompras', expect.any(Function));
-      expect(mockView.on).toHaveBeenCalledWith('loadComprasByFornecedor', expect.any(Function));
-      expect(mockView.on).toHaveBeenCalledWith('loadComprasByStatus', expect.any(Function));
-      expect(mockView.on).toHaveBeenCalledWith('selectCompra', expect.any(Function));
-      expect(mockView.on).toHaveBeenCalledWith('loadEstatisticas', expect.any(Function));
+    it('deve manter handlers disponiveis no controller', () => {
+      expect(controller.handleCreateCompra).toBeTypeOf('function');
+      expect(controller.handleConfirmarCompra).toBeTypeOf('function');
+      expect(controller.handleCancelarCompra).toBeTypeOf('function');
+      expect(controller.handleLoadCompras).toBeTypeOf('function');
+      expect(controller.handleLoadComprasByFornecedor).toBeTypeOf('function');
+      expect(controller.handleLoadComprasByStatus).toBeTypeOf('function');
+      expect(controller.handleSelectCompra).toBeTypeOf('function');
+      expect(controller.handleLoadEstatisticas).toBeTypeOf('function');
     });
   });
 
@@ -89,10 +102,10 @@ describe('ComprasController', () => {
 
       const result = await controller.handleCreateCompra(data);
 
-      expect(mockView.showLoading).toHaveBeenCalledWith('Criando compra...');
+      expect(mockLoading.show).toHaveBeenCalledWith('Criando compra...');
       expect(mockService.criarCompra).toHaveBeenCalledWith(data);
-      expect(mockView.hideLoading).toHaveBeenCalled();
-      expect(mockView.showSuccess).toHaveBeenCalledWith('Compra #compra-1 criada com sucesso!');
+      expect(mockLoading.hide).toHaveBeenCalled();
+      expect(mockToast.success).toHaveBeenCalledWith('Compra #compra-1 criada com sucesso!');
       expect(mockService.getAllCompras).toHaveBeenCalled();
       expect(result).toEqual(compra);
     });
@@ -104,8 +117,8 @@ describe('ComprasController', () => {
       await expect(controller.handleCreateCompra({}))
         .rejects.toThrow('Fornecedor não encontrado');
 
-      expect(mockView.hideLoading).toHaveBeenCalled();
-      expect(mockView.showError).toHaveBeenCalledWith('Fornecedor não encontrado');
+      expect(mockLoading.hide).toHaveBeenCalled();
+      expect(mockToast.error).toHaveBeenCalledWith('Fornecedor não encontrado');
     });
 
     it('deve mostrar erro genérico se erro não tiver mensagem', async () => {
@@ -114,7 +127,7 @@ describe('ComprasController', () => {
       await expect(controller.handleCreateCompra({}))
         .rejects.toThrow();
 
-      expect(mockView.showError).toHaveBeenCalledWith('Erro ao criar compra');
+      expect(mockToast.error).toHaveBeenCalledWith('Erro ao criar compra');
     });
   });
 
@@ -139,10 +152,10 @@ describe('ComprasController', () => {
 
       const result = await controller.handleConfirmarCompra('compra-1234567890');
 
-      expect(mockView.showLoading).toHaveBeenCalledWith('Confirmando compra...');
+      expect(mockLoading.show).toHaveBeenCalledWith('Confirmando compra...');
       expect(mockService.confirmarCompra).toHaveBeenCalledWith('compra-1234567890');
-      expect(mockView.hideLoading).toHaveBeenCalled();
-      expect(mockView.showSuccess).toHaveBeenCalledWith(
+      expect(mockLoading.hide).toHaveBeenCalled();
+      expect(mockToast.success).toHaveBeenCalledWith(
         'Compra #compra-1 confirmada! Estoque atualizado.'
       );
       expect(mockService.getAllCompras).toHaveBeenCalled();
@@ -157,8 +170,8 @@ describe('ComprasController', () => {
       await expect(controller.handleConfirmarCompra('compra-1'))
         .rejects.toThrow('Compra não está pendente');
 
-      expect(mockView.hideLoading).toHaveBeenCalled();
-      expect(mockView.showError).toHaveBeenCalledWith('Compra não está pendente');
+      expect(mockLoading.hide).toHaveBeenCalled();
+      expect(mockToast.error).toHaveBeenCalledWith('Compra não está pendente');
     });
 
     it('deve mostrar erro genérico se erro não tiver mensagem', async () => {
@@ -167,7 +180,7 @@ describe('ComprasController', () => {
       await expect(controller.handleConfirmarCompra('compra-1'))
         .rejects.toThrow();
 
-      expect(mockView.showError).toHaveBeenCalledWith('Erro ao confirmar compra');
+      expect(mockToast.error).toHaveBeenCalledWith('Erro ao confirmar compra');
     });
   });
 
@@ -188,10 +201,10 @@ describe('ComprasController', () => {
 
       const result = await controller.handleCancelarCompra(data);
 
-      expect(mockView.showLoading).toHaveBeenCalledWith('Cancelando compra...');
+      expect(mockLoading.show).toHaveBeenCalledWith('Cancelando compra...');
       expect(mockService.cancelarCompra).toHaveBeenCalledWith('compra-1234567890', 'Fornecedor não entregou');
-      expect(mockView.hideLoading).toHaveBeenCalled();
-      expect(mockView.showSuccess).toHaveBeenCalledWith('Compra #compra-1 cancelada.');
+      expect(mockLoading.hide).toHaveBeenCalled();
+      expect(mockToast.success).toHaveBeenCalledWith('Compra #compra-1 cancelada.');
       expect(mockService.getAllCompras).toHaveBeenCalled();
       expect(result).toEqual(compra);
     });
@@ -203,8 +216,8 @@ describe('ComprasController', () => {
       await expect(controller.handleCancelarCompra({ compraId: 'compra-1', motivo: 'teste' }))
         .rejects.toThrow('Compra já foi concluída');
 
-      expect(mockView.hideLoading).toHaveBeenCalled();
-      expect(mockView.showError).toHaveBeenCalledWith('Compra já foi concluída');
+      expect(mockLoading.hide).toHaveBeenCalled();
+      expect(mockToast.error).toHaveBeenCalledWith('Compra já foi concluída');
     });
 
     it('deve mostrar erro genérico se erro não tiver mensagem', async () => {
@@ -213,7 +226,7 @@ describe('ComprasController', () => {
       await expect(controller.handleCancelarCompra({ compraId: 'compra-1', motivo: 'teste' }))
         .rejects.toThrow();
 
-      expect(mockView.showError).toHaveBeenCalledWith('Erro ao cancelar compra');
+      expect(mockToast.error).toHaveBeenCalledWith('Erro ao cancelar compra');
     });
   });
 
@@ -228,9 +241,9 @@ describe('ComprasController', () => {
 
       const result = await controller.handleLoadCompras();
 
-      expect(mockView.showLoading).toHaveBeenCalledWith('Carregando compras...');
+      expect(mockLoading.show).toHaveBeenCalledWith('Carregando compras...');
       expect(mockService.getAllCompras).toHaveBeenCalled();
-      expect(mockView.hideLoading).toHaveBeenCalled();
+      expect(mockLoading.hide).toHaveBeenCalled();
       expect(mockView.renderComprasList).toHaveBeenCalledWith(compras);
       expect(result).toEqual(compras);
     });
@@ -242,8 +255,8 @@ describe('ComprasController', () => {
       await expect(controller.handleLoadCompras())
         .rejects.toThrow('Erro ao buscar compras');
 
-      expect(mockView.hideLoading).toHaveBeenCalled();
-      expect(mockView.showError).toHaveBeenCalledWith('Erro ao buscar compras');
+      expect(mockLoading.hide).toHaveBeenCalled();
+      expect(mockToast.error).toHaveBeenCalledWith('Erro ao buscar compras');
     });
 
     it('deve mostrar erro genérico se erro não tiver mensagem', async () => {
@@ -252,7 +265,7 @@ describe('ComprasController', () => {
       await expect(controller.handleLoadCompras())
         .rejects.toThrow();
 
-      expect(mockView.showError).toHaveBeenCalledWith('Erro ao carregar compras');
+      expect(mockToast.error).toHaveBeenCalledWith('Erro ao carregar compras');
     });
   });
 
@@ -267,9 +280,9 @@ describe('ComprasController', () => {
 
       const result = await controller.handleLoadComprasByFornecedor('fornecedor-1');
 
-      expect(mockView.showLoading).toHaveBeenCalledWith('Carregando compras do fornecedor...');
+      expect(mockLoading.show).toHaveBeenCalledWith('Carregando compras do fornecedor...');
       expect(mockService.getComprasByFornecedor).toHaveBeenCalledWith('fornecedor-1');
-      expect(mockView.hideLoading).toHaveBeenCalled();
+      expect(mockLoading.hide).toHaveBeenCalled();
       expect(mockView.renderComprasList).toHaveBeenCalledWith(compras);
       expect(result).toEqual(compras);
     });
@@ -281,8 +294,8 @@ describe('ComprasController', () => {
       await expect(controller.handleLoadComprasByFornecedor('fornecedor-999'))
         .rejects.toThrow('Fornecedor não encontrado');
 
-      expect(mockView.hideLoading).toHaveBeenCalled();
-      expect(mockView.showError).toHaveBeenCalledWith('Fornecedor não encontrado');
+      expect(mockLoading.hide).toHaveBeenCalled();
+      expect(mockToast.error).toHaveBeenCalledWith('Fornecedor não encontrado');
     });
 
     it('deve mostrar erro genérico se erro não tiver mensagem', async () => {
@@ -291,7 +304,7 @@ describe('ComprasController', () => {
       await expect(controller.handleLoadComprasByFornecedor('fornecedor-1'))
         .rejects.toThrow();
 
-      expect(mockView.showError).toHaveBeenCalledWith('Erro ao carregar compras');
+      expect(mockToast.error).toHaveBeenCalledWith('Erro ao carregar compras');
     });
   });
 
@@ -305,9 +318,9 @@ describe('ComprasController', () => {
 
       const result = await controller.handleLoadComprasByStatus('pendente');
 
-      expect(mockView.showLoading).toHaveBeenCalledWith('Carregando compras...');
+      expect(mockLoading.show).toHaveBeenCalledWith('Carregando compras...');
       expect(mockService.getComprasByStatus).toHaveBeenCalledWith('pendente');
-      expect(mockView.hideLoading).toHaveBeenCalled();
+      expect(mockLoading.hide).toHaveBeenCalled();
       expect(mockView.renderComprasList).toHaveBeenCalledWith(compras);
       expect(result).toEqual(compras);
     });
@@ -345,8 +358,8 @@ describe('ComprasController', () => {
       await expect(controller.handleLoadComprasByStatus('invalido'))
         .rejects.toThrow('Status inválido');
 
-      expect(mockView.hideLoading).toHaveBeenCalled();
-      expect(mockView.showError).toHaveBeenCalledWith('Status inválido');
+      expect(mockLoading.hide).toHaveBeenCalled();
+      expect(mockToast.error).toHaveBeenCalledWith('Status inválido');
     });
 
     it('deve mostrar erro genérico se erro não tiver mensagem', async () => {
@@ -355,7 +368,7 @@ describe('ComprasController', () => {
       await expect(controller.handleLoadComprasByStatus('pendente'))
         .rejects.toThrow();
 
-      expect(mockView.showError).toHaveBeenCalledWith('Erro ao carregar compras');
+      expect(mockToast.error).toHaveBeenCalledWith('Erro ao carregar compras');
     });
   });
 
@@ -384,7 +397,7 @@ describe('ComprasController', () => {
 
       await controller.handleSelectCompra('compra-999');
 
-      expect(mockView.showError).toHaveBeenCalledWith('Compra não encontrada');
+      expect(mockToast.error).toHaveBeenCalledWith('Compra não encontrada');
       expect(mockView.showCompraDetails).not.toHaveBeenCalled();
     });
 
@@ -395,7 +408,7 @@ describe('ComprasController', () => {
       await expect(controller.handleSelectCompra('compra-1'))
         .rejects.toThrow('Erro ao buscar compra');
 
-      expect(mockView.showError).toHaveBeenCalledWith('Erro ao buscar compra');
+      expect(mockToast.error).toHaveBeenCalledWith('Erro ao buscar compra');
     });
 
     it('deve mostrar erro genérico se erro não tiver mensagem', async () => {
@@ -404,7 +417,7 @@ describe('ComprasController', () => {
       await expect(controller.handleSelectCompra('compra-1'))
         .rejects.toThrow();
 
-      expect(mockView.showError).toHaveBeenCalledWith('Erro ao carregar compra');
+      expect(mockToast.error).toHaveBeenCalledWith('Erro ao carregar compra');
     });
   });
 
@@ -434,7 +447,7 @@ describe('ComprasController', () => {
       await expect(controller.handleLoadEstatisticas())
         .rejects.toThrow('Erro ao calcular estatísticas');
 
-      expect(mockView.showError).toHaveBeenCalledWith('Erro ao calcular estatísticas');
+      expect(mockToast.error).toHaveBeenCalledWith('Erro ao calcular estatísticas');
     });
 
     it('deve mostrar erro genérico se erro não tiver mensagem', async () => {
@@ -443,7 +456,7 @@ describe('ComprasController', () => {
       await expect(controller.handleLoadEstatisticas())
         .rejects.toThrow();
 
-      expect(mockView.showError).toHaveBeenCalledWith('Erro ao carregar estatísticas');
+      expect(mockToast.error).toHaveBeenCalledWith('Erro ao carregar estatísticas');
     });
   });
 
@@ -479,26 +492,23 @@ describe('ComprasController', () => {
       await controller.initialize();
 
       expect(consoleSpy).toHaveBeenCalledWith('Erro ao inicializar ComprasController:', error);
-      expect(mockView.showError).toHaveBeenCalledWith('Erro ao inicializar módulo de compras');
+      expect(mockToast.error).toHaveBeenCalledWith('Erro ao inicializar módulo de compras');
       
       consoleSpy.mockRestore();
     });
   });
 
   describe('destroy', () => {
-    it('deve remover event handlers', () => {
-      controller.destroy();
+    it('deve limpar referencias do controller', () => {
+        expect(controller.view).toBe(mockView);
+        expect(controller.comprasService).toBe(mockService);
 
-      expect(mockView.off).toHaveBeenCalledWith('createCompra', expect.any(Function));
-      expect(mockView.off).toHaveBeenCalledWith('confirmarCompra', expect.any(Function));
-      expect(mockView.off).toHaveBeenCalledWith('cancelarCompra', expect.any(Function));
-      expect(mockView.off).toHaveBeenCalledWith('loadCompras', expect.any(Function));
-      expect(mockView.off).toHaveBeenCalledWith('loadComprasByFornecedor', expect.any(Function));
-      expect(mockView.off).toHaveBeenCalledWith('loadComprasByStatus', expect.any(Function));
-      expect(mockView.off).toHaveBeenCalledWith('selectCompra', expect.any(Function));
-      expect(mockView.off).toHaveBeenCalledWith('loadEstatisticas', expect.any(Function));
+        controller.destroy();
+
+        expect(controller.view).toBeNull();
+        expect(controller.comprasService).toBeNull();
     });
-  });
+});
 
   describe('Integration Tests', () => {
     it('deve executar fluxo completo: criar → confirmar → carregar estatísticas', async () => {
@@ -606,3 +616,4 @@ describe('ComprasController', () => {
     });
   });
 });
+

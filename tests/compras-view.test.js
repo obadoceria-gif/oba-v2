@@ -135,13 +135,13 @@ describe('ComprasView', () => {
     });
 
     it('deve mostrar erro ao falhar criação', async () => {
-      const alertSpy = vi.spyOn(window, 'alert').mockImplementation(() => {});
+      const errorSpy = vi.spyOn(view, 'showError').mockImplementation(() => {});
       controller.createCompra.mockRejectedValue(new Error('Erro ao criar'));
 
       await view.handleCreateCompra({});
 
-      expect(alertSpy).toHaveBeenCalledWith('Erro: Erro ao criar');
-      alertSpy.mockRestore();
+      expect(errorSpy).toHaveBeenCalledWith('Erro ao criar');
+      errorSpy.mockRestore();
     });
 
     it('deve voltar para lista ao cancelar formulário', () => {
@@ -185,13 +185,13 @@ describe('ComprasView', () => {
     });
 
     it('deve mostrar erro se compra não encontrada', () => {
-      const alertSpy = vi.spyOn(window, 'alert').mockImplementation(() => {});
+      const errorSpy = vi.spyOn(view, 'showError').mockImplementation(() => {});
 
       view.handleViewCompra({ compraId: 'inexistente' });
 
-      expect(alertSpy).toHaveBeenCalledWith('Erro: Compra não encontrada');
+      expect(errorSpy).toHaveBeenCalledWith('Compra não encontrada');
       expect(view.components.details).toBeNull();
-      alertSpy.mockRestore();
+      errorSpy.mockRestore();
     });
 
     it('deve fechar modal ao emitir evento', () => {
@@ -227,13 +227,13 @@ describe('ComprasView', () => {
     });
 
     it('deve mostrar erro ao falhar recebimento', async () => {
-      const alertSpy = vi.spyOn(window, 'alert').mockImplementation(() => {});
+      const errorSpy = vi.spyOn(view, 'showError').mockImplementation(() => {});
       controller.receiveCompra.mockRejectedValue(new Error('Erro ao receber'));
 
       await view.handleReceiveCompra({ compraId: 'c1' });
 
-      expect(alertSpy).toHaveBeenCalledWith('Erro: Erro ao receber');
-      alertSpy.mockRestore();
+      expect(errorSpy).toHaveBeenCalledWith('Erro ao receber');
+      errorSpy.mockRestore();
     });
   });
 
@@ -317,3 +317,6 @@ describe('ComprasView', () => {
     });
   });
 });
+
+
+

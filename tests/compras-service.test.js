@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Testes para ComprasService
  */
 
@@ -97,7 +97,7 @@ describe('ComprasService', () => {
     let fornecedor;
 
     beforeEach(async () => {
-      fornecedor = new Fornecedor({
+      fornecedor = new Fornecedor({ cnpj: '00000001000136',
         nome: 'Fornecedor Teste',
         ativo: true
       });
@@ -260,7 +260,7 @@ describe('ComprasService', () => {
     let compra;
 
     beforeEach(async () => {
-      fornecedor = new Fornecedor({
+      fornecedor = new Fornecedor({ cnpj: '00000002000180',
         nome: 'Fornecedor Teste',
         ativo: true
       });
@@ -364,7 +364,7 @@ describe('ComprasService', () => {
     let compra;
 
     beforeEach(async () => {
-      fornecedor = new Fornecedor({
+      fornecedor = new Fornecedor({ cnpj: '00000003000125',
         nome: 'Fornecedor Teste',
         ativo: true
       });
@@ -441,8 +441,8 @@ describe('ComprasService', () => {
     let compra1, compra2, compra3;
 
     beforeEach(async () => {
-      fornecedor1 = new Fornecedor({ nome: 'Fornecedor 1', ativo: true });
-      fornecedor2 = new Fornecedor({ nome: 'Fornecedor 2', ativo: true });
+      fornecedor1 = new Fornecedor({ cnpj: '00000004000170', nome: 'Fornecedor 1', ativo: true });
+      fornecedor2 = new Fornecedor({ cnpj: '00000005000114', nome: 'Fornecedor 2', ativo: true });
       await fornecedoresRepository.save(fornecedor1);
       await fornecedoresRepository.save(fornecedor2);
 
@@ -506,7 +506,7 @@ describe('ComprasService', () => {
     let fornecedor;
 
     beforeEach(async () => {
-      fornecedor = new Fornecedor({ nome: 'Fornecedor Teste', ativo: true });
+      fornecedor = new Fornecedor({ cnpj: '00000006000169', nome: 'Fornecedor Teste', ativo: true });
       await fornecedoresRepository.save(fornecedor);
     });
 
@@ -562,7 +562,7 @@ describe('ComprasService', () => {
     let fornecedor;
 
     beforeEach(async () => {
-      fornecedor = new Fornecedor({ nome: 'Fornecedor Teste', ativo: true });
+      fornecedor = new Fornecedor({ cnpj: '00000007000103', nome: 'Fornecedor Teste', ativo: true });
       await fornecedoresRepository.save(fornecedor);
     });
 
@@ -608,3 +608,4 @@ describe('ComprasService', () => {
     });
   });
 });
+
