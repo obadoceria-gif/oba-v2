@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Testes para InsumosController
  */
 
@@ -9,6 +9,8 @@ describe('InsumosController', () => {
   let controller;
   let mockService;
   let mockView;
+  let mockToast;
+  let mockLoading;
 
   beforeEach(() => {
     // Mock do service
@@ -35,7 +37,20 @@ describe('InsumosController', () => {
       confirm: vi.fn()
     };
 
+    mockToast = {
+      success: vi.fn(),
+      error: vi.fn(),
+      warning: vi.fn()
+    };
+
+    mockLoading = {
+      show: vi.fn(() => 'loading-test'),
+      hide: vi.fn()
+    };
+
     controller = new InsumosController(mockService, mockView);
+    controller.toast = mockToast;
+    controller.loading = mockLoading;
   });
 
   describe('Constructor', () => {
@@ -80,10 +95,10 @@ describe('InsumosController', () => {
 
       const result = await controller.handleCreateInsumo(insumoData);
 
-      expect(mockView.showLoading).toHaveBeenCalledWith('Criando insumo...');
+      expect(controller.loading.show).toHaveBeenCalledWith('Criando insumo...');
       expect(mockService.createInsumo).toHaveBeenCalledWith(insumoData);
-      expect(mockView.hideLoading).toHaveBeenCalled();
-      expect(mockView.showSuccess).toHaveBeenCalledWith('Insumo criado com sucesso!');
+      expect(controller.loading.hide).toHaveBeenCalled();
+      expect(controller.toast.success).toHaveBeenCalledWith('Insumo criado com sucesso!');
       expect(mockView.clearForm).toHaveBeenCalled();
       expect(mockService.getAllInsumos).toHaveBeenCalled();
       expect(result).toEqual({ success: true, data: insumo });
@@ -96,8 +111,8 @@ describe('InsumosController', () => {
       await expect(controller.handleCreateInsumo({}))
         .rejects.toThrow('Erro de validação');
 
-      expect(mockView.hideLoading).toHaveBeenCalled();
-      expect(mockView.showError).toHaveBeenCalledWith('Erro de validação');
+      expect(controller.loading.hide).toHaveBeenCalled();
+      expect(controller.toast.error).toHaveBeenCalledWith('Erro de validação');
     });
   });
 
@@ -114,10 +129,10 @@ describe('InsumosController', () => {
 
       const result = await controller.handleUpdateInsumo(updateData);
 
-      expect(mockView.showLoading).toHaveBeenCalledWith('Atualizando insumo...');
+      expect(controller.loading.show).toHaveBeenCalledWith('Atualizando insumo...');
       expect(mockService.updateInsumo).toHaveBeenCalledWith('1', { nome: 'Farinha Atualizada' });
-      expect(mockView.hideLoading).toHaveBeenCalled();
-      expect(mockView.showSuccess).toHaveBeenCalledWith('Insumo atualizado com sucesso!');
+      expect(controller.loading.hide).toHaveBeenCalled();
+      expect(controller.toast.success).toHaveBeenCalledWith('Insumo atualizado com sucesso!');
       expect(mockView.clearForm).toHaveBeenCalled();
       expect(result).toEqual({ success: true, data: insumo });
     });
@@ -129,7 +144,7 @@ describe('InsumosController', () => {
       await expect(controller.handleUpdateInsumo('1', {}))
         .rejects.toThrow('Insumo não encontrado');
 
-      expect(mockView.showError).toHaveBeenCalledWith('Insumo não encontrado');
+      expect(controller.toast.error).toHaveBeenCalledWith('Insumo não encontrado');
     });
   });
 
@@ -145,9 +160,9 @@ describe('InsumosController', () => {
       expect(mockView.confirm).toHaveBeenCalledWith(
         'Tem certeza que deseja remover este insumo?'
       );
-      expect(mockView.showLoading).toHaveBeenCalledWith('Removendo insumo...');
+      expect(controller.loading.show).toHaveBeenCalledWith('Removendo insumo...');
       expect(mockService.deleteInsumo).toHaveBeenCalledWith(id);
-      expect(mockView.showSuccess).toHaveBeenCalledWith('Insumo removido com sucesso!');
+      expect(controller.toast.success).toHaveBeenCalledWith('Insumo removido com sucesso!');
     });
 
     it('não deve remover se usuário cancelar', async () => {
@@ -156,7 +171,7 @@ describe('InsumosController', () => {
       await controller.handleDeleteInsumo('1');
 
       expect(mockService.deleteInsumo).not.toHaveBeenCalled();
-      expect(mockView.showSuccess).not.toHaveBeenCalled();
+      expect(controller.toast.success).not.toHaveBeenCalled();
     });
 
     it('deve mostrar erro se remoção falhar', async () => {
@@ -167,7 +182,7 @@ describe('InsumosController', () => {
       await expect(controller.handleDeleteInsumo('1'))
         .rejects.toThrow('Insumo possui referências');
 
-      expect(mockView.showError).toHaveBeenCalledWith('Insumo possui referências');
+      expect(controller.toast.error).toHaveBeenCalledWith('Insumo possui referências');
     });
   });
 
@@ -180,7 +195,7 @@ describe('InsumosController', () => {
 
       await controller.handleFilterChange(filters);
 
-      expect(mockView.showLoading).toHaveBeenCalledWith('Filtrando insumos...');
+      expect(controller.loading.show).toHaveBeenCalledWith('Filtrando insumos...');
       expect(mockService.getInsumos).toHaveBeenCalledWith(filters);
       expect(mockView.renderInsumosList).toHaveBeenCalledWith(insumos);
     });
@@ -192,7 +207,7 @@ describe('InsumosController', () => {
       await expect(controller.handleFilterChange({}))
         .rejects.toThrow('Erro ao filtrar');
 
-      expect(mockView.showError).toHaveBeenCalledWith('Erro ao filtrar');
+      expect(controller.toast.error).toHaveBeenCalledWith('Erro ao filtrar');
     });
   });
 
@@ -207,7 +222,7 @@ describe('InsumosController', () => {
 
       const result = await controller.handleLoadInsumos();
 
-      expect(mockView.showLoading).toHaveBeenCalledWith('Carregando insumos...');
+      expect(controller.loading.show).toHaveBeenCalledWith('Carregando insumos...');
       expect(mockService.getAllInsumos).toHaveBeenCalled();
       expect(mockView.renderInsumosList).toHaveBeenCalledWith(insumos);
       expect(result).toEqual(insumos);
@@ -220,7 +235,7 @@ describe('InsumosController', () => {
       await expect(controller.handleLoadInsumos())
         .rejects.toThrow('Erro ao carregar');
 
-      expect(mockView.showError).toHaveBeenCalledWith('Erro ao carregar');
+      expect(controller.toast.error).toHaveBeenCalledWith('Erro ao carregar');
     });
   });
 
@@ -240,7 +255,7 @@ describe('InsumosController', () => {
 
       await controller.handleSelectInsumo('999');
 
-      expect(mockView.showError).toHaveBeenCalledWith('Insumo não encontrado');
+      expect(controller.toast.error).toHaveBeenCalledWith('Insumo não encontrado');
       expect(mockView.populateForm).not.toHaveBeenCalled();
     });
 
@@ -251,7 +266,7 @@ describe('InsumosController', () => {
       await expect(controller.handleSelectInsumo('1'))
         .rejects.toThrow('Erro ao buscar');
 
-      expect(mockView.showError).toHaveBeenCalledWith('Erro ao buscar');
+      expect(controller.toast.error).toHaveBeenCalledWith('Erro ao buscar');
     });
   });
 
@@ -282,7 +297,7 @@ describe('InsumosController', () => {
       await controller.initialize();
 
       expect(consoleSpy).toHaveBeenCalled();
-      expect(mockView.showError).toHaveBeenCalledWith('Erro ao inicializar módulo de insumos');
+      expect(controller.toast.error).toHaveBeenCalledWith('Erro ao inicializar módulo de insumos');
       
       consoleSpy.mockRestore();
     });
@@ -303,7 +318,7 @@ describe('InsumosController', () => {
   });
 
   describe('Integration Tests', () => {
-    it('deve executar fluxo completo: criar → listar → editar → remover', async () => {
+    it('deve executar fluxo completo: criar â†’ listar â†’ editar â†’ remover', async () => {
       const insumoData = { nome: 'Farinha', unidade: 'kg', custoUnitario: 500 };
       const insumo = { id: '1', ...insumoData };
       const insumoAtualizado = { ...insumo, nome: 'Farinha Premium' };
@@ -337,3 +352,6 @@ describe('InsumosController', () => {
     });
   });
 });
+
+
+
