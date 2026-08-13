@@ -186,7 +186,8 @@ describe('Storage Layer - IndexedDBAdapter', () => {
           movimentacoes: [],
           clientes: [],
           pedidos: [],
-          fichas: []
+          fichas: [],
+          producoes: []
         }
       };
 
@@ -304,7 +305,7 @@ describe('Storage Layer - LocalStorageAdapter', () => {
   describe('Initialization', () => {
     it('should initialize localStorage successfully', async () => {
       expect(storage.stores).toBeDefined();
-      expect(storage.stores).toHaveLength(8); // insumos, compras, fornecedores, estoque, movimentacoes, clientes, pedidos, fichas
+      expect(storage.stores).toHaveLength(9); // insumos, compras, fornecedores, estoque, movimentacoes, clientes, pedidos, fichas
     });
 
     it('should create empty stores on init', async () => {
@@ -445,7 +446,8 @@ describe('Storage Layer - LocalStorageAdapter', () => {
           movimentacoes: [],
           clientes: [],
           pedidos: [],
-          fichas: []
+          fichas: [],
+          producoes: []
         }
       };
 

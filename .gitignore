@@ -36,3 +36,6 @@ coverage/
 
 # OS
 Thumbs.db
+
+# Workspace local / quarentena de diagnosticos
+_workspace_quarantine/

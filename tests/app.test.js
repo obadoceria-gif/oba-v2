@@ -62,11 +62,11 @@ describe('App', () => {
       expect(footer).toBeTruthy();
     });
 
-    it('deve renderizar menu com 3 módulos', async () => {
+    it('deve renderizar menu com 7 módulos', async () => {
       await app.init();
 
       const menuItems = appContainer.querySelectorAll('.menu-item');
-      expect(menuItems.length).toBe(3);
+      expect(menuItems.length).toBe(7);
 
       const modules = Array.from(menuItems).map(item => item.dataset.module);
       expect(modules).toContain('insumos');
@@ -74,10 +74,10 @@ describe('App', () => {
       expect(modules).toContain('compras');
     });
 
-    it('deve carregar módulo inicial (insumos)', async () => {
+    it('deve carregar módulo inicial (dashboard)', async () => {
       await app.init();
 
-      expect(app.currentModule).toBe('insumos');
+      expect(app.currentModule).toBe('dashboard');
       expect(app.currentView).toBeDefined();
     });
 
@@ -86,7 +86,7 @@ describe('App', () => {
 
       const activeItem = appContainer.querySelector('.menu-item.active');
       expect(activeItem).toBeTruthy();
-      expect(activeItem.dataset.module).toBe('insumos');
+      expect(activeItem.dataset.module).toBe('dashboard');
     });
   });
 
