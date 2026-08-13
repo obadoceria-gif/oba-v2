@@ -223,8 +223,7 @@ export class MovimentacaoHistory {
 
       // Filtro de data fim
       if (this.filters.dataFim) {
-        const dataFim = new Date(this.filters.dataFim);
-        dataFim.setHours(23, 59, 59, 999); // Incluir todo o dia
+        const dataFim = new Date(`${this.filters.dataFim}T23:59:59.999`);
         const dataMovimentacao = new Date(mov.data);
         if (dataMovimentacao > dataFim) {
           return false;

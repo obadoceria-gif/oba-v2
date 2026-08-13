@@ -63,7 +63,7 @@ describe('MovimentacaoHistory Component', () => {
         custoUnitario: 500,
         origem: 'compra',
         observacoes: 'Compra inicial',
-        criadoEm: '2026-02-16T10:00:00Z'
+        data: '2026-02-16T10:00:00Z'
       });
 
       component.update([movimentacao], [insumo]);
@@ -87,14 +87,14 @@ describe('MovimentacaoHistory Component', () => {
         quantidade: 25,
         custoUnitario: 300,
         origem: 'compra',
-        criadoEm: '2026-02-16T11:00:00Z'
+        data: '2026-02-16T11:00:00Z'
       });
 
       component.update([movimentacao], [insumo]);
 
       const table = container.querySelector('.movimentacao-table');
       expect(table.textContent).toContain('25');
-      expect(table.textContent).toContain('R$'$');
+      expect(table.textContent).toContain('R$');
     });
 
     it('deve calcular e exibir total corretamente', () => {
@@ -110,34 +110,7 @@ describe('MovimentacaoHistory Component', () => {
         quantidade: 10,
         custoUnitario: 450,
         origem: 'compra',
-        criadoEm: '2026-02-16T12:00:00Z'
-      });
-
-      component.update([movimentacao], [insumo]);
-
-      const total = movimentacao.calculateTotal();
-      expect(total).toBe(4500); // 10 × 450
-
-      const table = container.querySelector('.movimentacao-table');
-      expect(table.textContent).toContain('45,00');
-    });
-  });$');
-    });
-
-    it('deve calcular e exibir total corretamente', () => {
-      const insumo = new Insumo({
-        nome: 'Leite',
-        unidade: 'L',
-        custoUnitario: 450
-      });
-
-      const movimentacao = new Movimentacao({
-        insumoId: insumo.id,
-        tipo: 'entrada',
-        quantidade: 10,
-        custoUnitario: 450,
-        origem: 'compra',
-        criadoEm: '2026-02-16T12:00:00Z'
+        data: '2026-02-16T12:00:00Z'
       });
 
       component.update([movimentacao], [insumo]);
@@ -149,6 +122,31 @@ describe('MovimentacaoHistory Component', () => {
       expect(table.textContent).toContain('45,00');
     });
   });
+
+    it('deve calcular e exibir total corretamente', () => {
+      const insumo = new Insumo({
+        nome: 'Leite',
+        unidade: 'L',
+        custoUnitario: 450
+      });
+
+      const movimentacao = new Movimentacao({
+        insumoId: insumo.id,
+        tipo: 'entrada',
+        quantidade: 10,
+        custoUnitario: 450,
+        origem: 'compra',
+        data: '2026-02-16T12:00:00Z'
+      });
+
+      component.update([movimentacao], [insumo]);
+
+      const total = movimentacao.calculateTotal();
+      expect(total).toBe(4500); // 10 × 450
+
+      const table = container.querySelector('.movimentacao-table');
+      expect(table.textContent).toContain('45,00');
+    });
 
   describe('Tipos de movimentação', () => {
     it('deve exibir badge de entrada corretamente', () => {
@@ -164,7 +162,7 @@ describe('MovimentacaoHistory Component', () => {
         quantidade: 50,
         custoUnitario: 500,
         origem: 'compra',
-        criadoEm: '2026-02-16T13:00:00Z'
+        data: '2026-02-16T13:00:00Z'
       });
 
       component.update([movimentacao], [insumo]);
@@ -187,7 +185,7 @@ describe('MovimentacaoHistory Component', () => {
         quantidade: 10,
         custoUnitario: 500,
         origem: 'producao',
-        criadoEm: '2026-02-16T14:00:00Z'
+        data: '2026-02-16T14:00:00Z'
       });
 
       component.update([movimentacao], [insumo]);
@@ -213,7 +211,7 @@ describe('MovimentacaoHistory Component', () => {
           quantidade: 50,
           custoUnitario: 500,
           origem: 'compra',
-          criadoEm: '2026-02-10T10:00:00Z'
+          data: '2026-02-10T10:00:00Z'
         }),
         new Movimentacao({
           insumoId: insumo.id,
@@ -221,7 +219,7 @@ describe('MovimentacaoHistory Component', () => {
           quantidade: 10,
           custoUnitario: 500,
           origem: 'producao',
-          criadoEm: '2026-02-15T14:00:00Z'
+          data: '2026-02-15T14:00:00Z'
         }),
         new Movimentacao({
           insumoId: insumo.id,
@@ -229,7 +227,7 @@ describe('MovimentacaoHistory Component', () => {
           quantidade: 30,
           custoUnitario: 520,
           origem: 'compra',
-          criadoEm: '2026-02-20T09:00:00Z'
+          data: '2026-02-20T09:00:00Z'
         })
       ];
 
@@ -311,7 +309,7 @@ describe('MovimentacaoHistory Component', () => {
           quantidade: 50,
           custoUnitario: 500,
           origem: 'compra',
-          criadoEm: '2026-02-10T10:00:00Z'
+          data: '2026-02-10T10:00:00Z'
         }),
         new Movimentacao({
           insumoId: insumo.id,
@@ -319,7 +317,7 @@ describe('MovimentacaoHistory Component', () => {
           quantidade: 10,
           custoUnitario: 500,
           origem: 'producao',
-          criadoEm: '2026-02-20T14:00:00Z'
+          data: '2026-02-20T14:00:00Z'
         }),
         new Movimentacao({
           insumoId: insumo.id,
@@ -327,7 +325,7 @@ describe('MovimentacaoHistory Component', () => {
           quantidade: 30,
           custoUnitario: 520,
           origem: 'compra',
-          criadoEm: '2026-02-15T09:00:00Z'
+          data: '2026-02-15T09:00:00Z'
         })
       ];
 
